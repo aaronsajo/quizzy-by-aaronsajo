@@ -1,5 +1,6 @@
-class User < ApplicationRecord
+# frozen_string_literal: true
 
+class User < ApplicationRecord
   VALID_EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i.freeze
 
   validates :first_name, presence: true, length: { maximum: Constants::MAX_NAME_LENGTH }
@@ -10,7 +11,7 @@ class User < ApplicationRecord
 
   private
 
-  def to_lowercase
-    email.downcase!
-  end
+    def to_lowercase
+      email.downcase!
+    end
 end
