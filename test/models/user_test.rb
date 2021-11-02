@@ -1,4 +1,6 @@
-require 'test_helper'
+# frozen_string_literal: true
+
+require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   def setup
@@ -22,7 +24,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_user_should_not_be_valid_and_saved_without_email
-    @user.email = ''
+    @user.email = ""
     assert_not @user.valid?
     assert_equal ["Email can't be blank", "Email is invalid"], @user.errors.full_messages
   end
@@ -54,7 +56,7 @@ class UserTest < ActiveSupport::TestCase
   def test_validation_should_accept_valid_addresses
     valid_emails = %w[user@example.com USER@example.COM US-ER@example.org
       first.last@example.in user+one@example.ac.in]
-  
+
     valid_emails.each do |email|
       @user.email = email
       assert @user.valid?
@@ -64,7 +66,7 @@ class UserTest < ActiveSupport::TestCase
   def test_validation_should_reject_invalid_addresses
     invalid_emails = %w[user@example,com user_at_example.org user.name@example.
       @sam-sam.com sam@sam+exam.com fishy+#.com]
-  
+
     invalid_emails.each do |email|
       @user.email = email
       assert @user.invalid?
@@ -76,7 +78,6 @@ class UserTest < ActiveSupport::TestCase
     test_user.email = test_user.email.upcase
     test_user.save!
     assert @user.invalid?
-
   end
   # embed new test cases here...
 end
