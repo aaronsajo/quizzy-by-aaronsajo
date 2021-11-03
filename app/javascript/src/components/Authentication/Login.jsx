@@ -24,13 +24,13 @@ const Login = () => {
       });
       setAuthHeaders();
       setLoading(false);
-      window.location.href = "/";
+      window.location.href = "/about";
     } catch (error) {
       logger.error(error);
       setLoading(false);
     }
   };
-  if (loading) return <h1>Loading...</h1>;
+  loading;
 
   return (
     <div
