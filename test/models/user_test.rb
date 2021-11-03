@@ -4,7 +4,12 @@ require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   def setup
-    @user = User.new(first_name: "Sam", last_name: "Smith", email: "sam@example.com")
+    @user = User.new(
+      first_name: "Sam",
+      last_name: "Smith",
+      email: "sam@example.com",
+      password: "welcome",
+      password_confirmation: "welcome")
   end
 
   def test_user_should_be_valid
@@ -32,11 +37,13 @@ class UserTest < ActiveSupport::TestCase
   def test_first_name_should_be_of_valid_length
     @user.first_name = "a" * 51
     assert @user.invalid?
+    assert_includes @user.errors.full_messages, "First name is too long (maximum is 50 characters)"
   end
 
   def test_last_name_should_be_of_valid_length
     @user.last_name = "a" * 51
     assert @user.invalid?
+    assert_includes @user.errors.full_messages, "Last name is too long (maximum is 50 characters)"
   end
 
   def test_user_should_not_be_valid_and_saved_if_email_not_unique
@@ -70,6 +77,7 @@ class UserTest < ActiveSupport::TestCase
     invalid_emails.each do |email|
       @user.email = email
       assert @user.invalid?
+      assert_includes @user.errors.full_messages, "Email is invalid"
     end
   end
 
@@ -78,6 +86,7 @@ class UserTest < ActiveSupport::TestCase
     test_user.email = test_user.email.upcase
     test_user.save!
     assert @user.invalid?
+    assert_includes @user.errors.full_messages, "Email has already been taken"
   end
 
   def test_validation_should_have_valid_role
@@ -86,5 +95,30 @@ class UserTest < ActiveSupport::TestCase
     @user.role = "administrator"
     assert @user.valid?
   end
+
+  def test_user_should_not_be_saved_without_password
+    @user.password = nil
+    assert_not @user.save
+    assert_includes @user.errors.full_messages, "Password can't be blank"
+  end
+
+  def test_user_should_not_be_saved_without_password_confirmation
+    @user.password_confirmation = nil
+    assert_not @user.save
+    assert_includes @user.errors.full_messages, "Password confirmation can't be blank"
+  end
+
+  def test_user_should_have_matching_password_and_password_confirmation
+    @user.password_confirmation = "#{@user.password}-random"
+    assert_not @user.save
+    assert_includes @user.errors.full_messages, "Password confirmation doesn't match Password"
+  end
+
+  def test_user_should_have_minimun_password_length
+    @user.password = "wel"
+    @user.password_confirmation = "wel"
+    assert_not @user.save
+  end
+
   # embed new test cases here...
 end
