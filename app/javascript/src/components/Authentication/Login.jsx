@@ -14,6 +14,7 @@ const Login = () => {
   const handleSubmit = async event => {
     event.preventDefault();
     try {
+      setLoading(true);
       const response = await authApi.login({ login: { email, password } });
       setToLocalStorage({
         authToken: response.data.authentication_token,
@@ -29,7 +30,8 @@ const Login = () => {
       setLoading(false);
     }
   };
-  loading;
+  if (loading) return <h1>Loading...</h1>;
+
   return (
     <div
       className="flex items-center justify-center min-h-screen
