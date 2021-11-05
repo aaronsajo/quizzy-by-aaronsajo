@@ -7,6 +7,7 @@ import { registerIntercepts, setAuthHeaders } from "apis/axios";
 import Login from "components/Authentication/Login";
 
 import { initializeLogger } from "./common/logger";
+import Dashboard from "./components/Dashboard";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -21,14 +22,17 @@ const App = () => {
   loading;
 
   return (
-    <Router>
-      <ToastContainer />
-      <Switch>
-        <Route exact path="/" render={() => <div>Home ALL</div>} />
-        <Route exact path="/about" render={() => <div>About</div>} />
-        <Route exact path="/login" component={Login} />
-      </Switch>
-    </Router>
+    <div>
+      <Router>
+        <ToastContainer />
+        <Switch>
+          <Route exact path="/" render={() => <div>Home ALL</div>} />
+          <Route exact path="/about" render={() => <div>About</div>} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/dashboard" component={Dashboard} />
+        </Switch>
+      </Router>
+    </div>
   );
 };
 
