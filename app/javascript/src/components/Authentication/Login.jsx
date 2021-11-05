@@ -19,13 +19,13 @@ const Login = () => {
       const response = await authApi.login({ login: { email, password } });
       setToLocalStorage({
         authToken: response.data.authentication_token,
-        email,
+        email: response.data.email,
         userId: response.data.id,
         userName: response.data.first_name + " " + response.data.last_name,
       });
       setAuthHeaders();
       setLoading(false);
-      window.location.href = "/dashboard";
+      window.location.href = "/";
     } catch (error) {
       logger.error(error);
       setLoading(false);
