@@ -17,6 +17,7 @@ const setAuthHeaders = (setLoading = () => null) => {
   };
   const token = getFromLocalStorage("authToken");
   const email = getFromLocalStorage("authEmail");
+
   if (token && email) {
     axios.defaults.headers["X-Auth-Email"] = email;
     axios.defaults.headers["X-Auth-Token"] = token;
@@ -55,5 +56,9 @@ const registerIntercepts = () => {
     handleErrorResponse(error)
   );
 };
+const resetAuthTokens = () => {
+  delete axios.defaults.headers["X-Auth-Email"];
+  delete axios.defaults.headers["X-Auth-Token"];
+};
 
-export { setAuthHeaders, registerIntercepts };
+export { setAuthHeaders, registerIntercepts, resetAuthTokens };

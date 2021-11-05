@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
 import { Button, Input } from "@bigbinary/neetoui/v2";
-import { Header } from "@bigbinary/neetoui/v2/layouts";
 
 import authApi from "apis/auth";
 import { setAuthHeaders } from "apis/axios";
+import Navbar from "components/Navbar";
 import { setToLocalStorage } from "helpers/storage";
 
 const Login = () => {
@@ -19,13 +19,13 @@ const Login = () => {
       const response = await authApi.login({ login: { email, password } });
       setToLocalStorage({
         authToken: response.data.authentication_token,
-        email,
+        email: response.data.email,
         userId: response.data.id,
-        userName: response.data.name,
+        userName: response.data.first_name + " " + response.data.last_name,
       });
       setAuthHeaders();
       setLoading(false);
-      window.location.href = "/about";
+      window.location.href = "/";
     } catch (error) {
       logger.error(error);
       setLoading(false);
@@ -35,9 +35,7 @@ const Login = () => {
 
   return (
     <div>
-      <div className="border-b-4 border-black pl-20">
-        <Header title="Quizzy" />
-      </div>
+      <Navbar />
 
       <div
         className="flex items-center justify-center
