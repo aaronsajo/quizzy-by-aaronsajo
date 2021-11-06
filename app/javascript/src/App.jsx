@@ -11,6 +11,7 @@ import { getFromLocalStorage } from "helpers/storage";
 
 import { initializeLogger } from "./common/logger";
 import Dashboard from "./components/Dashboard";
+import CreateQuiz from "./components/Quizzes/QuizForm";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -33,7 +34,7 @@ const App = () => {
         <Switch>
           <Route exact path="/about" render={() => <div>About</div>} />
           <Route exact path="/login" component={Login} />
-
+          <Route exact path="/quiz/create" component={CreateQuiz} />
           <PrivateRoute
             path="/"
             redirectRoute="/login"
