@@ -14,7 +14,8 @@ const Dashboard = () => {
   const fetchQuizzes = async () => {
     try {
       const response = await quizzesApi.list();
-      setQuizzes(response.data.quizzes);
+
+      setQuizzes(response.data.quiz);
       setLoading(false);
     } catch (error) {
       logger.error(error);
@@ -45,6 +46,7 @@ const Dashboard = () => {
             icon={Plus}
             iconPosition="left"
             style="secondary"
+            onClick={() => (window.location.href = "/quiz/create")}
           />
         </div>
         <div className="flex justify-center mt-40 pt-10">
@@ -64,7 +66,19 @@ const Dashboard = () => {
           icon={Plus}
           iconPosition="left"
           style="secondary"
+          onClick={() => (window.location.href = "/quiz/create")}
         />
+      </div>
+      <div></div>
+      <div className="mt-24 ml-24">
+        <h2>The Quiz:</h2>
+        {quizzes.map((d, i) => (
+          <div key={i}>
+            <h2>
+              {i + 1}.{d.title}
+            </h2>
+          </div>
+        ))}
       </div>
     </div>
   );

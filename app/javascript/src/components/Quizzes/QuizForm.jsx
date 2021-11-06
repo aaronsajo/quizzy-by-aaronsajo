@@ -1,0 +1,44 @@
+import React, { useState } from "react";
+
+import { Input, Button } from "@bigbinary/neetoui/v2";
+
+import quizzesApi from "apis/quizzes";
+
+import Navbar from "../Navbar";
+
+const CreateQuiz = ({ history }) => {
+  const [title, setTitle] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+    try {
+      await quizzesApi.create({ quiz: { title } });
+      setLoading(false);
+      history.push("/");
+    } catch (error) {
+      logger.error(error);
+      setLoading(false);
+    }
+  };
+  if (loading) <h1>Loading...</h1>;
+
+  return (
+    <div>
+      <Navbar />
+      <form className="max-w-lg mx-auto mt-10">
+        <h1 className="mb-5">Add new Quiz</h1>
+        <Input
+          label="Quiz Name"
+          placeholder="Quiz Title (Max 50 Characters Allowed)"
+          value={title}
+          onChange={e => setTitle(e.target.value.slice(0, 50))}
+          className="mb-5"
+        />
+        <Button label="Submit" onClick={handleSubmit} />
+      </form>
+    </div>
+  );
+};
+
+export default CreateQuiz;
