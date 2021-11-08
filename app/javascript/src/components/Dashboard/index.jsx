@@ -6,6 +6,7 @@ import { Button } from "@bigbinary/neetoui/v2";
 import quizzesApi from "apis/quizzes";
 
 import Navbar from "../Navbar";
+import { Table } from "../Table/Table";
 
 const Dashboard = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -15,7 +16,7 @@ const Dashboard = () => {
     try {
       const response = await quizzesApi.list();
 
-      setQuizzes(response.data.quiz);
+      setQuizzes(response.data.quizzes);
       setLoading(false);
     } catch (error) {
       logger.error(error);
@@ -35,10 +36,11 @@ const Dashboard = () => {
     );
   }
 
-  if (!quizzes) {
+  if (quizzes.length == 0) {
     return (
       <div>
         <Navbar />
+
         <div className="absolute right-0 mr-20 mt-4 bg-blue-800">
           <Button
             label="Add new quiz"
@@ -46,11 +48,11 @@ const Dashboard = () => {
             icon={Plus}
             iconPosition="left"
             style="secondary"
-            onClick={() => (window.location.href = "/quiz/create")}
+            to="/quiz/create"
           />
         </div>
         <div className="flex justify-center mt-40 pt-10">
-          {!quizzes && <h1>You have created no Quizzes</h1>}
+          <h1>You have created no Quizzes</h1>
         </div>
       </div>
     );
@@ -59,26 +61,20 @@ const Dashboard = () => {
   return (
     <div>
       <Navbar />
-      <div className="absolute right-0 mr-20 mt-4 bg-blue-800">
+      <div className="mr-32 absolute right-0  mt-4 bg-blue-800">
         <Button
           label="Add new quiz"
           size="large"
           icon={Plus}
           iconPosition="left"
           style="secondary"
-          onClick={() => (window.location.href = "/quiz/create")}
+          to="/quiz/create"
         />
       </div>
       <div></div>
-      <div className="mt-24 ml-24">
-        <h2>The Quiz:</h2>
-        {quizzes.map((d, i) => (
-          <div key={i}>
-            <h2>
-              {i + 1}.{d.title}
-            </h2>
-          </div>
-        ))}
+      <div className="mt-4 ml-24">
+        <h2>The List of Quiz:</h2>
+        <Table quizData={quizzes} fetchQuizzes={fetchQuizzes} />
       </div>
     </div>
   );

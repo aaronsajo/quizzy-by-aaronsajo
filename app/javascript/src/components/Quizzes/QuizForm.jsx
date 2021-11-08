@@ -32,7 +32,7 @@ const CreateQuiz = ({ history }) => {
           label="Quiz Name"
           placeholder="Quiz Title (Max 50 Characters Allowed)"
           value={title}
-          onChange={e => setTitle(e.target.value.slice(0, 50))}
+          onChange={e => setTitle(e.target.value)}
           className="mb-5"
         />
         <Button label="Submit" onClick={handleSubmit} />
