@@ -11,6 +11,7 @@ import { getFromLocalStorage } from "helpers/storage";
 
 import { initializeLogger } from "./common/logger";
 import Dashboard from "./components/Dashboard";
+import EditQuiz from "./components/Quizzes/EditQuiz";
 import CreateQuiz from "./components/Quizzes/QuizForm";
 
 const App = () => {
@@ -32,9 +33,9 @@ const App = () => {
       <Router>
         <ToastContainer />
         <Switch>
-          <Route exact path="/about" render={() => <div>About</div>} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/quiz/create" component={CreateQuiz} />
+          <Route exact path="/quiz/edit/:id" component={EditQuiz} />
           <PrivateRoute
             path="/"
             redirectRoute="/login"
