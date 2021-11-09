@@ -13,6 +13,7 @@ import { initializeLogger } from "./common/logger";
 import Dashboard from "./components/Dashboard";
 import EditQuiz from "./components/Quizzes/EditQuiz";
 import CreateQuiz from "./components/Quizzes/QuizForm";
+import { ShowQuiz } from "./components/Quizzes/ShowQuiz";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,7 @@ const App = () => {
           <Route exact path="/login" component={Login} />
           <Route exact path="/quiz/create" component={CreateQuiz} />
           <Route exact path="/quiz/edit/:id" component={EditQuiz} />
+          <Route exact path="/quiz/:id/show" component={ShowQuiz} />
           <PrivateRoute
             path="/"
             redirectRoute="/login"
