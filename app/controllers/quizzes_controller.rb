@@ -4,7 +4,7 @@ class QuizzesController < ApplicationController
   before_action :authenticate_user_using_x_auth_token
   before_action :load_quiz, only: [:destroy, :show, :update]
   def index
-    @quizzes = @current_user.quizzes
+    @quizzes = @current_user.quizzes.order("created_at Desc")
   end
 
   def create

@@ -41,7 +41,7 @@ const Dashboard = () => {
       <div>
         <Navbar />
 
-        <div className="absolute right-0 mr-20 mt-4 bg-blue-800">
+        <div className="absolute right-0 mr-20 mt-4 ">
           <Button
             label="Add new quiz"
             size="large"

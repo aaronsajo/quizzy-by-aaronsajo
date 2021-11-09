@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 
 import { Edit, Delete } from "@bigbinary/neeto-icons";
 import { Button, Typography, Modal } from "@bigbinary/neetoui/v2";
+import { Link } from "react-router-dom";
 import { useTable } from "react-table";
 
 import quizzesApi from "apis/quizzes";
@@ -62,7 +63,9 @@ export const Table = ({ quizData, fetchQuizzes }) => {
                     {...cell.getCellProps()}
                   >
                     <div>
-                      <Typography>{cell.render("Cell")}</Typography>
+                      <Link to={`/quiz/${row.original.id}/show`}>
+                        <Typography>{cell.render("Cell")}</Typography>
+                      </Link>
                     </div>
                     <div>
                       <Button
