@@ -14,14 +14,24 @@ export const AddQuestions = () => {
   const [answer, setAnswer] = useState(null);
   const [title, setTitle] = useState("");
   const { id } = useParams();
-  answer;
   const handleOptions = () => {
     const newOption = "opt" + `${Object.keys(options).length + 1}`;
     SetOptions(opt => ({ ...opt, [newOption]: "" }));
   };
   const handleClose = op => {
     const dummyOption = options;
-    delete dummyOption[op];
+    const i = Object.keys(options).indexOf(op);
+    let nextOption = Object.keys(options)[i + 1];
+    if (nextOption) {
+      dummyOption[op] = dummyOption[nextOption];
+      delete dummyOption[nextOption];
+      setAnswer(null);
+    } else {
+      delete dummyOption[op];
+      if (answer && answer.value == op) {
+        setAnswer(null);
+      }
+    }
     SetOptions({ ...dummyOption });
   };
   const fetchQuizDetails = async () => {
@@ -78,10 +88,11 @@ export const AddQuestions = () => {
         <Select
           isSearchable
           label="Answer"
-          name="ValueList"
+          name="OptionList"
           className="w-1/2 p-3"
+          value={answer}
           onChange={e => {
-            setAnswer(e.value);
+            setAnswer(e);
           }}
           options={Object.keys(options).map(op => ({
             label: op,
