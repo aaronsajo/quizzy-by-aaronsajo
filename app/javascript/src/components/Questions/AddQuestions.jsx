@@ -1,6 +1,9 @@
+import { TOASTR_OPTIONS } from "constants";
+
 import React, { useEffect, useState } from "react";
 
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { questionApi } from "apis/questions";
 import quizzesApi from "apis/quizzes";
@@ -19,19 +22,28 @@ export const AddQuestions = () => {
     SetOptions(opt => ({ ...opt, [newOption]: "" }));
   };
   const handleSubmit = async () => {
-    const data = Object.values(options).map((val, index) => {
-      return {
-        content: val,
-        answer: String(answer && answer.value == Object.keys(options)[index]),
-      };
-    });
-    await questionApi.create({
-      question: {
-        description: question,
-        quiz_id: id,
-        options_attributes: data,
-      },
-    });
+    if (question === "") {
+      toast.error("Question Can't be blank", TOASTR_OPTIONS);
+    } else if (Object.values(options).includes("")) {
+      toast.error("Option Can't be blank", TOASTR_OPTIONS);
+    } else if (answer === null) {
+      toast.error("Select an answer", TOASTR_OPTIONS);
+    } else {
+      const data = Object.values(options).map((val, index) => {
+        return {
+          content: val,
+          answer: String(answer && answer.value == Object.keys(options)[index]),
+        };
+      });
+      await questionApi.create({
+        question: {
+          description: question,
+          quiz_id: id,
+          options_attributes: data,
+        },
+      });
+      window.location.href = `/quiz/${id}/show`;
+    }
   };
 
   const handleClose = op => {

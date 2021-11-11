@@ -9,7 +9,8 @@ class UserTest < ActiveSupport::TestCase
       last_name: "Smith",
       email: "sam@example.com",
       password: "welcome",
-      password_confirmation: "welcome")
+      password_confirmation: "welcome",
+      role: "administrator")
   end
 
   def test_user_should_be_valid
@@ -90,9 +91,9 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_validation_should_have_valid_role
-    assert_equal @user.role, "standard"
+    assert_equal @user.role, "administrator"
     assert @user.valid?
-    @user.role = "administrator"
+    @user.role = "standard"
     assert @user.valid?
   end
 
