@@ -33,7 +33,7 @@ export const ShowQuiz = () => {
             icon={Plus}
             iconPosition="left"
             style="secondary"
-            to={`/${id}/show`}
+            to={`/quiz/${id}/addquestion`}
           />
         </div>
         <Typography style="h2" className="mt-4">
