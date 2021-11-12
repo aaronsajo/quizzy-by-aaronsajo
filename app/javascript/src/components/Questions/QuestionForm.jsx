@@ -10,7 +10,7 @@ export const QuestionForm = ({
   question,
   setQuestion,
   options,
-  SetOptions,
+  setOptions,
   answer,
   setAnswer,
   handleClose,
@@ -29,26 +29,29 @@ export const QuestionForm = ({
           className="w-1/2 p-3"
           placeholder="Write the question"
         />
-        {Object.keys(options).map((op, i) => (
+        {options.map((op, i) => (
           <div className="flex w-1/2 p-3" key={i}>
             <Input
-              label={op + ":"}
-              value={options[op]}
+              label={Object.keys(op)[0] + ":"}
+              value={options[i][`opt${i + 1}`]}
               onChange={e =>
-                SetOptions(opt => ({ ...opt, [op]: e.target.value }))
+                setOptions(opt => {
+                  opt[i][`opt${i + 1}`] = e.target.value;
+                  return [...opt];
+                })
               }
             />
-            {op > "opt2" && (
+            {i > 1 && (
               <Button
                 style="danger"
                 icon={Close}
                 className="h-1 mt-5 ml-2"
-                onClick={() => handleClose(op)}
+                onClick={() => handleClose(op, i)}
               />
             )}
           </div>
         ))}
-        {Object.keys(options).length < 4 && (
+        {options.length < 4 && (
           <Button
             label="Add options"
             onClick={() => handleOptions()}
@@ -66,13 +69,12 @@ export const QuestionForm = ({
           onChange={e => {
             setAnswer(e);
           }}
-          options={Object.keys(options).map(op => ({
-            label: op,
-            value: op,
+          options={options.map(op => ({
+            label: Object.keys(op)[0],
+            value: Object.keys(op)[0],
           }))}
           placeholder="Select an Answer"
         />
-
         <Button label="Submit" className="p-4 ml-5" onClick={handleSubmit} />
       </div>
     </div>

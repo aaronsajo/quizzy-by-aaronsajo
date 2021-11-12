@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
+  before_action :authenticate_user_using_x_auth_token
   before_action :load_quiz
   def create
     @question = @quiz.questions.new(question_params)
     unless @question.save
-      render sattus :unprocessable_entity,
-        json: { error: @question.error.full_messages.to_sentence }
+      render status: :unprocessable_entity,
+        json: { error: @question.errors.full_messages.to_sentence }
     end
   end
 
@@ -17,7 +18,7 @@ class QuestionsController < ApplicationController
     end
 
     def load_quiz
-      @quiz = Quiz.find_by(id: question_params[:quiz_id])
+      @quiz = @current_user.quizzes.find_by(id: question_params[:quiz_id])
       unless @quiz
         render status: :not_found, json: { error: "Quiz not found" }
       end

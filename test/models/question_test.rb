@@ -12,8 +12,25 @@ class QuestionTest < ActiveSupport::TestCase
     @question = quiz.questions.new(description: "What is h20?")
   end
 
-  def test_question_should_be_valid
+  def test_question_should_be_valid_with_options
+    option1 = @question.options.new(content: "Water", answer: true)
+    option2 = @question.options.new(content: "Salt", answer: false)
     assert @question.valid?
+  end
+
+  def test_question_should_be_invalid_without_options
+    assert @question.invalid?
+    assert_includes @question.errors.full_messages, "Options Length should be less than 4 and more than 2"
+  end
+
+  def test_question_should_be_invalid_with_more_than_four_options
+    option1 = @question.options.new(content: "Water", answer: true)
+    option2 = @question.options.new(content: "Salt", answer: false)
+    option3 = @question.options.new(content: "Honey", answer: false)
+    option4 = @question.options.new(content: "sugar", answer: false)
+    option5 = @question.options.new(content: "calcium", answer: false)
+    assert @question.invalid?
+    assert_includes @question.errors.full_messages, "Options Length should be less than 4 and more than 2"
   end
 
   def test_question_description_should_be_present
