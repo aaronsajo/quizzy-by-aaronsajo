@@ -2,7 +2,7 @@ import React from "react";
 
 import { Button, Typography, Modal } from "@bigbinary/neetoui/v2";
 
-export const DeleteModal = ({ showModal, setShowModal, deleteQuiz }) => {
+export const DeleteModal = ({ showModal, setShowModal, deleteQ }) => {
   return (
     <div>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
@@ -14,7 +14,7 @@ export const DeleteModal = ({ showModal, setShowModal, deleteQuiz }) => {
           <Button
             style="danger"
             label="Delete"
-            onClick={() => deleteQuiz()}
+            onClick={() => deleteQ()}
             size="large"
           />
           <Button

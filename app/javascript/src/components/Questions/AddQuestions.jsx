@@ -47,7 +47,6 @@ export const AddQuestions = () => {
       window.location.href = `/quiz/${id}/show`;
     }
   };
-
   const handleClose = (opt, index) => {
     let dummyOption = options;
     let nextOption = options[index + 1];

@@ -97,7 +97,7 @@ export const Table = ({ quizData, fetchQuizzes }) => {
       <DeleteModal
         showModal={showModal}
         setShowModal={setShowModal}
-        deleteQuiz={deleteQuiz}
+        deleteQ={deleteQuiz}
       />
     </div>
   );

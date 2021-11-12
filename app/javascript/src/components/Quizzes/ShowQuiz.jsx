@@ -5,14 +5,27 @@ import { CheckCircle, Delete, Edit } from "@bigbinary/neeto-icons";
 import { Button, Typography } from "@bigbinary/neetoui/v2";
 import { useParams } from "react-router-dom";
 
+import { questionApi } from "apis/questions";
 import quizzesApi from "apis/quizzes";
 
+import { DeleteModal } from "../modal/DeleteModal";
 import Navbar from "../Navbar";
 
 export const ShowQuiz = () => {
   const { id } = useParams();
   const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState([]);
+  const [deleteId, setDeleteId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const deleteQuestion = async () => {
+    try {
+      await questionApi.destroy(deleteId);
+      fetchQuizDeatils();
+      setShowModal(false);
+    } catch (error) {
+      logger.error(error);
+    }
+  };
   const fetchQuizDeatils = async () => {
     try {
       const response = await quizzesApi.show(id);
@@ -104,18 +117,33 @@ export const ShowQuiz = () => {
                 ))}
               </div>
               <div className="ml-5 flex h-3 ">
-                <Button className=" mr-5  " icon={Edit} label="Edit" />
+                <Button
+                  className=" mr-5 "
+                  icon={Edit}
+                  label="Edit"
+                  to={`/quiz/${id}/question/${question.id}/edit`}
+                />
                 <Button
                   style="danger"
                   className=" mr-5 "
                   icon={Delete}
                   label="Delete"
+                  onClick={() => {
+                    setShowModal(true);
+                    setDeleteId(question.id);
+                  }}
                 />
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      <DeleteModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        deleteQ={deleteQuestion}
+      />
     </div>
   );
 };
