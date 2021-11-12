@@ -1,13 +1,14 @@
 import React, { useMemo, useState } from "react";
 
 import { Edit, Delete } from "@bigbinary/neeto-icons";
-import { Button, Typography, Modal } from "@bigbinary/neetoui/v2";
+import { Button, Typography } from "@bigbinary/neetoui/v2";
 import { Link } from "react-router-dom";
 import { useTable } from "react-table";
 
 import quizzesApi from "apis/quizzes";
 
 import { COLUMNS } from "../columns";
+import { DeleteModal } from "../modal/DeleteModal";
 
 export const Table = ({ quizData, fetchQuizzes }) => {
   const columns = useMemo(() => COLUMNS, []);
@@ -93,26 +94,11 @@ export const Table = ({ quizData, fetchQuizzes }) => {
         </tbody>
       </table>
 
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-        <Modal.Header>
-          <Typography style="h2">Confirm Delete</Typography>
-        </Modal.Header>
-
-        <Modal.Footer className="space-x-2">
-          <Button
-            style="danger"
-            label="Delete"
-            onClick={() => deleteQuiz()}
-            size="large"
-          />
-          <Button
-            style="secondary"
-            label="Cancel"
-            onClick={() => setShowModal(false)}
-            size="large"
-          />
-        </Modal.Footer>
-      </Modal>
+      <DeleteModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        deleteQ={deleteQuiz}
+      />
     </div>
   );
 };

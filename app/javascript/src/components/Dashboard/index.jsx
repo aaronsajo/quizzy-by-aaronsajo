@@ -36,7 +36,7 @@ const Dashboard = () => {
     );
   }
 
-  if (quizzes.length == 0) {
+  if (quizzes.length === 0) {
     return (
       <div>
         <Navbar />

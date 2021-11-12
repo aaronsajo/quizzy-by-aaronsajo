@@ -12,14 +12,15 @@ import { QuestionForm } from "./QuestionForm";
 
 export const AddQuestions = () => {
   const [question, setQuestion] = useState("");
-  const [options, SetOptions] = useState({ opt1: "", opt2: "" });
+  const [options, setOptions] = useState([{ opt1: "" }, { opt2: "" }]);
   const [answer, setAnswer] = useState(null);
   const [title, setTitle] = useState("");
   const { id } = useParams();
 
   const handleOptions = () => {
-    const newOption = "opt" + `${Object.keys(options).length + 1}`;
-    SetOptions(opt => ({ ...opt, [newOption]: "" }));
+    const newOption = "opt" + `${options.length + 1}`;
+
+    setOptions(opt => [...opt, { [newOption]: "" }]);
   };
   const handleSubmit = async () => {
     if (question === "") {
@@ -29,12 +30,13 @@ export const AddQuestions = () => {
     } else if (answer === null) {
       toast.error("Select an answer", TOASTR_OPTIONS);
     } else {
-      const data = Object.values(options).map((val, index) => {
+      const data = options.map((val, index) => {
         return {
-          content: val,
-          answer: String(answer && answer.value == Object.keys(options)[index]),
+          content: val[`opt${index + 1}`],
+          answer: String(answer && answer.value === Object.keys(val)[0]),
         };
       });
+
       await questionApi.create({
         question: {
           description: question,
@@ -45,22 +47,27 @@ export const AddQuestions = () => {
       window.location.href = `/quiz/${id}/show`;
     }
   };
-
-  const handleClose = op => {
-    const dummyOption = options;
-    const i = Object.keys(options).indexOf(op);
-    let nextOption = Object.keys(options)[i + 1];
+  const handleClose = (opt, index) => {
+    let dummyOption = options;
+    let nextOption = options[index + 1];
     if (nextOption) {
-      dummyOption[op] = dummyOption[nextOption];
-      delete dummyOption[nextOption];
-      setAnswer(null);
+      dummyOption[index][`opt${index + 1}`] = nextOption[`opt${index + 2}`];
+      dummyOption.pop();
+      if (
+        answer &&
+        (answer.value === Object.keys(opt)[0] ||
+          answer.value === Object.keys(nextOption)[0])
+      ) {
+        setAnswer(null);
+      }
     } else {
-      delete dummyOption[op];
-      if (answer && answer.value == op) {
+      dummyOption.pop();
+
+      if (answer && answer.value === Object.keys(opt)[0]) {
         setAnswer(null);
       }
     }
-    SetOptions({ ...dummyOption });
+    setOptions([...dummyOption]);
   };
 
   const fetchQuizDetails = async () => {
@@ -81,7 +88,7 @@ export const AddQuestions = () => {
       question={question}
       setQuestion={setQuestion}
       options={options}
-      SetOptions={SetOptions}
+      setOptions={setOptions}
       answer={answer}
       setAnswer={setAnswer}
       handleClose={handleClose}
