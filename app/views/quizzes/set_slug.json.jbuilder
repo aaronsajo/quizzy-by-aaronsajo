@@ -1,0 +1,1 @@
+json.slug @quiz.slug
