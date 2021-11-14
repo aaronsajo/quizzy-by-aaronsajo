@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Plus } from "@bigbinary/neeto-icons";
 import { CheckCircle, Delete, Edit } from "@bigbinary/neeto-icons";
 import { Button, Typography } from "@bigbinary/neetoui/v2";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import { questionApi } from "apis/questions";
 import quizzesApi from "apis/quizzes";
@@ -17,6 +17,7 @@ export const ShowQuiz = () => {
   const [questions, setQuestions] = useState([]);
   const [deleteId, setDeleteId] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [slug, setSlug] = useState(null);
   const deleteQuestion = async () => {
     try {
       await questionApi.destroy(deleteId);
@@ -31,10 +32,16 @@ export const ShowQuiz = () => {
       const response = await quizzesApi.show(id);
       setTitle(response.data.quiz.title);
       setQuestions(response.data.quiz.questions);
+      setSlug(response.data.quiz.slug);
     } catch (error) {
       logger.error(error);
     }
   };
+  const handlePublish = async () => {
+    const response = await quizzesApi.createSlug(id);
+    setSlug(response.data.slug);
+  };
+
   useEffect(() => {
     fetchQuizDeatils();
   }, []);
@@ -53,6 +60,7 @@ export const ShowQuiz = () => {
               to={`/quiz/${id}/questions/add`}
             />
           </div>
+
           <Typography style="h2" className="mt-4">
             {title}
           </Typography>
@@ -68,7 +76,7 @@ export const ShowQuiz = () => {
     <div>
       <Navbar />
       <div className="ml-8 px-2 mt-4">
-        <div className="absolute right-0 mr-20 mt-4">
+        <div className="right-0 absolute  mr-20 mt-4">
           <Button
             label="Add questions"
             size="large"
@@ -77,11 +85,31 @@ export const ShowQuiz = () => {
             style="secondary"
             to={`/quiz/${id}/questions/add`}
           />
+          {!slug && (
+            <Button
+              label="Publish"
+              size="large"
+              icon={Plus}
+              iconPosition="left"
+              style="secondary"
+              onClick={() => handlePublish()}
+              className="ml-5"
+            />
+          )}
         </div>
+
         <Typography style="h2" className="mt-6">
           {title}
         </Typography>
         <div className="w-3/4 mt-8 ml-20 ">
+          {slug && (
+            <Typography>
+              Published, your public link is-{" "}
+              <Link to={`/public/${slug}`} className=" text-blue-500 ">
+                http://localhost:3000/public/{`${slug}`}
+              </Link>{" "}
+            </Typography>
+          )}
           {questions.map((question, i) => (
             <div key={i} className="p-6 flex justify-between">
               <div>

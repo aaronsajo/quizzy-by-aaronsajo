@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
       @current_user = user
     else
       render status: :unauthorized, json: {
-        error: "Could not authenticate with the provided credentials"
+        error: t("could_not_auth")
       }
     end
   end

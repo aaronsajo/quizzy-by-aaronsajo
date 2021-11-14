@@ -7,7 +7,9 @@ class QuestionsController < ApplicationController
 
   def create
     @question = @quiz.questions.new(question_params)
-    unless @question.save
+    if @question.save
+      render status: :ok, json: { notice: t("successfully_created", entity: "Question") }
+    else
       render status: :unprocessable_entity,
         json: { error: @question.errors.full_messages.to_sentence }
     end
@@ -19,7 +21,7 @@ class QuestionsController < ApplicationController
 
   def update
     if @question.update(update_question_params)
-      render status: :ok, json: { notice: "Successfully updated question" }
+      render status: :ok, json: { notice: t("successfully_updated", entity: "Question") }
     else
       render status: :unprocessable_entity, json: { error: @question.errors.full_messages.to_sentence }
     end
@@ -27,7 +29,7 @@ class QuestionsController < ApplicationController
 
   def destroy
     if @question.destroy
-      render status: :ok, json: { notice: "Successfully deleted question." }
+      render status: :ok, json: { notice: t("successfully_deleted", entity: "Question") }
     else
       render status: :unprocessable_entity,
         json: { error: @question.errors.full_messages.to_sentence }
@@ -39,7 +41,7 @@ class QuestionsController < ApplicationController
     def load_quiz
       @quiz = @current_user.quizzes.find_by(id: question_params[:quiz_id])
       unless @quiz
-        render status: :not_found, json: { error: "Quiz not found" }
+        render status: :not_found, json: { error: t("not_found", entity: "Quiz") }
       end
     end
 
@@ -50,6 +52,9 @@ class QuestionsController < ApplicationController
     def load_question
       puts params[:id]
       @question = Question.find_by(id: params[:id])
+      unless @question
+        render status: :not_found, json: { error: t("not_found", entity: "Question") }
+      end
     end
 
     def update_question_params

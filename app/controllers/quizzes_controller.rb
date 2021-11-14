@@ -2,7 +2,7 @@
 
 class QuizzesController < ApplicationController
   before_action :authenticate_user_using_x_auth_token
-  before_action :load_quiz, only: [:destroy, :show, :update]
+  before_action :load_quiz, only: [:destroy, :show, :update, :set_slug]
   def index
     @quizzes = @current_user.quizzes.order("created_at Desc")
   end
@@ -10,7 +10,7 @@ class QuizzesController < ApplicationController
   def create
     quiz = @current_user.quizzes.new(quiz_params)
     if quiz.save
-      render status: :ok, json: { notice: "Quiz was successfully created" }
+      render status: :ok, json: { notice: t("successfully_created", entity: "Quiz") }
     else
       errors = quiz.errors.full_messages.to_sentence
       render status: :unprocessable_entity, json: { error: errors }
@@ -19,7 +19,7 @@ class QuizzesController < ApplicationController
 
   def update
     if @quiz.update(quiz_params)
-      render status: :ok, json: { notice: "Successfully updated Quiz." }
+      render status: :ok, json: { notice: t("successfully_updated", entity: "Quiz") }
     else
       render status: :unprocessable_entity,
         json: { error: @quiz.errors.full_messages.to_sentence }
@@ -32,11 +32,28 @@ class QuizzesController < ApplicationController
 
   def destroy
     if @quiz.destroy
-      render status: :ok, json: { notice: "Successfully deleted quiz." }
+      render status: :ok, json: { notice: t("successfully_deleted", entity: "Quiz") }
     else
       render status: :unprocessable_entity,
         json: { error: @quiz.errors.full_messages.to_sentence }
     end
+  end
+
+  def set_slug
+    title_slug = @quiz.title.parameterize
+    regex_pattern = "slug #{Constants::DB_REGEX_OPERATOR} ?"
+    latest_quiz_slug = Quiz.where(
+      regex_pattern,
+      "#{title_slug}$|#{title_slug}-[0-9]+$"
+    ).order(slug: :desc).first&.slug
+    slug_count = 0
+    if latest_quiz_slug.present?
+      slug_count = latest_quiz_slug.split("-").last.to_i
+      only_one_slug_exists = slug_count == 0
+      slug_count = 1 if only_one_slug_exists
+    end
+    slug = slug_count.positive? ? "#{title_slug}-#{slug_count + 1}" : title_slug
+    @quiz.update(slug: slug)
   end
 
   private
@@ -44,7 +61,7 @@ class QuizzesController < ApplicationController
     def load_quiz
       @quiz = @current_user.quizzes.find_by(id: params[:id])
       unless @quiz
-        render status: :not_found, json: { error: "Quiz not found" }
+        render status: :not_found, json: { error: c }
       end
     end
 
