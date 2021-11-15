@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     resources :questions, only: %i[update show create destroy]
   end
   get "quizzes/slug/:id", to: "quizzes#set_slug"
+  get "public/quiz/:slug", to: "quizzes#check_slug"
   root "home#index"
   get "*path", to: "home#index", via: :all
 end
