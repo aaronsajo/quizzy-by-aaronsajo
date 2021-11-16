@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Typography, Input, Button } from "@bigbinary/neetoui/v2";
+import { Typography, Input, Button, Radio } from "@bigbinary/neetoui/v2";
 import { useParams } from "react-router-dom";
 
 import { questionApi } from "apis/questions";
@@ -19,6 +19,7 @@ export const AttemptQuiz = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isEligible, setIsEligible] = useState(true);
   const [data, setData] = useState([]);
+  const [result, setResult] = useState([]);
   const checkSlug = async () => {
     const response = await quizzesApi.checkSlug(slug);
     setTitle(response.data.title);
@@ -32,9 +33,15 @@ export const AttemptQuiz = () => {
 
     setIsEligible(response.data.eligible);
     setIsLoggedIn(true);
-    const questionResponse = await questionApi.list(quizId);
+    const questionResponse = await questionApi.list(response.data.id);
     setData(questionResponse.data.questions);
   };
+  const handleChange = e => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setResult(res => ({ ...res, [name]: value }));
+  };
+  result;
   useEffect(() => {
     checkSlug();
   }, []);
@@ -80,14 +87,32 @@ export const AttemptQuiz = () => {
       <div>
         <Navbar />
         <div className="w-3/5 ml-16 mt-12">
+          <Typography style="h2" className="mb-8">
+            {title}
+          </Typography>
           {data.map((question, i) => (
             <div key={i}>
-              <div>Question :{question.description}</div>
-              {question.options.map((option, index) => (
-                <div key={index}>
-                  option{index + 1}. {option.content}
-                </div>
-              ))}
+              <div className="flex">
+                <Typography className="text-gray-600">
+                  Question {i + 1}
+                </Typography>
+                <Typography className="ml-12 " style="h3">
+                  {question.description}
+                </Typography>
+              </div>
+              <Radio className="ml-32 space-y-4 " stacked>
+                {question.options.map((option, index) => (
+                  <div key={index}>
+                    <Radio.Item
+                      name={question.description}
+                      label={option.content}
+                      value={option.content}
+                      onChange={handleChange}
+                      className="my-1 "
+                    />
+                  </div>
+                ))}
+              </Radio>
             </div>
           ))}
         </div>
