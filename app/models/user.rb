@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_secure_password
   has_secure_token :authentication_token
   has_many :quizzes, dependent: :destroy
+  has_many :attempts
 
   validates :first_name, presence: true, length: { maximum: Constants::MAX_NAME_LENGTH }
   validates :last_name, presence: true, length: { maximum: Constants::MAX_NAME_LENGTH }

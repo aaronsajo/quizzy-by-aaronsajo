@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
-  before_action :authenticate_user_using_x_auth_token
+  before_action :authenticate_user_using_x_auth_token, except: :index
   before_action :load_quiz, only: [:create]
   before_action :load_question, only: [:destroy, :show, :update]
+
+  def index
+    @quiz = Quiz.find_by(id: params[:id])
+  end
 
   def create
     @question = @quiz.questions.new(question_params)
