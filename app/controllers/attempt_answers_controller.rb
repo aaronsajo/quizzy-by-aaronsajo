@@ -3,10 +3,17 @@
 class AttemptAnswersController < ApplicationController
   before_action :load_attempt
   def create
+    @correct_answer_count = 0
+    @incorrect_answer_count = 0
     answer_params[:attempts].each do |attempt_data|
       attempt_answer = @attempt.attempt_answers.new(attempt_data)
       attempt_answer.save!
       option = Option.find_by_id(attempt_data[:attempted_answer])
+      if option.answer
+        @correct_answer_count += 1
+      else
+        @incorrect_answer_count += 1
+      end
     end
     @attempt.update(submitted: true)
   end

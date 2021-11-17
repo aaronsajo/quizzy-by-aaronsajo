@@ -2,8 +2,8 @@ import axios from "axios";
 
 const create = payload => axios.post("/attempt_answers", payload);
 
-const attemptApi = {
+const attemptAnswerApi = {
   create,
 };
 
-export default attemptApi;
+export default attemptAnswerApi;

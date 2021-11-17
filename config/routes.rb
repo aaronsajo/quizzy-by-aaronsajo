@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     resources :questions, only: %i[update show create destroy index]
     resource :users, only: :create
     resource :attempt_answers, only: :create
+    resources :attempts, only: :show
   end
   get "quizzes/slug/:id", to: "quizzes#set_slug"
   get "public/quiz/:slug", to: "quizzes#check_slug"

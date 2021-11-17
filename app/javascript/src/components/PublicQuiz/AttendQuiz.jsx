@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { Typography, Radio, Button } from "@bigbinary/neetoui/v2";
 
-export const AttendQuiz = ({ title, data, handleChange, handleSubmit }) => {
+import { questionApi } from "apis/questions";
+
+import Navbar from "../Navbar";
+
+export const AttendQuiz = ({ title, handleSubmit, quizId, handleChange }) => {
+  const [data, setData] = useState([]);
+
+  const fetchData = async () => {
+    const questionResponse = await questionApi.list(quizId);
+    setData(questionResponse.data.questions);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <div>
+      <Navbar />
       <div className="w-3/5 ml-16 mt-12">
         <Typography style="h2" className="mb-8">
           {title}
@@ -34,7 +48,7 @@ export const AttendQuiz = ({ title, data, handleChange, handleSubmit }) => {
             </Radio>
           </div>
         ))}
-        <Button label="submit" onClick={handleSubmit} />
+        <Button label="submit" className="ml-16" onClick={handleSubmit} />
       </div>
     </div>
   );
