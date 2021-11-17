@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 
-import { Typography, Input, Button, Radio } from "@bigbinary/neetoui/v2";
 import { useParams } from "react-router-dom";
 
+import attemptApi from "apis/attempts_answers";
 import { questionApi } from "apis/questions";
 import quizzesApi from "apis/quizzes";
 import usersApi from "apis/users";
+
+import { AttendQuiz } from "./AttendQuiz";
+import { StandardLogin } from "./StandardLogin";
 
 import Navbar from "../Navbar";
 
@@ -17,108 +20,76 @@ export const AttemptQuiz = () => {
   const [quizId, setQuizId] = useState(null);
   const [lastName, setLastName] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isEligible, setIsEligible] = useState(true);
+  const [isEligible, setIsEligible] = useState(false);
   const [data, setData] = useState([]);
+  const [attemptId, setAttemptId] = useState(null);
   const [result, setResult] = useState([]);
+
   const checkSlug = async () => {
     const response = await quizzesApi.checkSlug(slug);
     setTitle(response.data.title);
     setQuizId(response.data.id);
   };
+
   const handleLogin = async () => {
     const response = await usersApi.login({
       user: { email, first_name: firstName, last_name: lastName },
       quiz_id: quizId,
     });
-
+    setAttemptId(response.data.attempt_id);
     setIsEligible(response.data.eligible);
     setIsLoggedIn(true);
-    const questionResponse = await questionApi.list(response.data.id);
+    const questionResponse = await questionApi.list(quizId);
     setData(questionResponse.data.questions);
   };
+
   const handleChange = e => {
     const name = e.target.name;
     const value = e.target.value;
-    setResult(res => ({ ...res, [name]: value }));
+    setResult(res => [...res, { question_id: name, attempted_answer: value }]);
   };
-  result;
+  const handleSubmit = () => {
+    const payload = {
+      answer: {
+        attempt_id: attemptId,
+        attempts: result,
+      },
+    };
+    attemptApi.create(payload);
+    setIsEligible(false);
+  };
+
   useEffect(() => {
     checkSlug();
   }, []);
-  if (!isLoggedIn) {
-    return (
-      <div>
-        <Navbar />
-        <div className="ml-16 w-3/4">
-          <Typography style="h2" className="my-12">
-            Welcome to {title}{" "}
-          </Typography>
-          <div className="w-2/5">
-            <Input
-              label="email:"
-              placeholder="oliver@example.com"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-            />
-            <br />
-            <Input
-              label="First Name:"
-              placeholder="Enter your first name"
-              value={firstName}
-              onChange={e => setFirstName(e.target.value)}
-            />
-            <br />
-            <Input
-              label="Last Name:"
-              placeholder="Enter your last  name"
-              value={lastName}
-              onChange={e => setLastName(e.target.value)}
-            />
-            <br />
-            <Button label="Submit" onClick={() => handleLogin()} />
-          </div>
-        </div>
-      </div>
-    );
+  if (isLoggedIn && !isEligible) {
+    return <h1>You have already submited</h1>;
   }
 
-  if (isEligible) {
-    return (
-      <div>
-        <Navbar />
-        <div className="w-3/5 ml-16 mt-12">
-          <Typography style="h2" className="mb-8">
-            {title}
-          </Typography>
-          {data.map((question, i) => (
-            <div key={i}>
-              <div className="flex">
-                <Typography className="text-gray-600">
-                  Question {i + 1}
-                </Typography>
-                <Typography className="ml-12 " style="h3">
-                  {question.description}
-                </Typography>
-              </div>
-              <Radio className="ml-32 space-y-4 " stacked>
-                {question.options.map((option, index) => (
-                  <div key={index}>
-                    <Radio.Item
-                      name={question.description}
-                      label={option.content}
-                      value={option.content}
-                      onChange={handleChange}
-                      className="my-1 "
-                    />
-                  </div>
-                ))}
-              </Radio>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <Navbar />
+      {!isLoggedIn && (
+        <StandardLogin
+          title={title}
+          email={email}
+          setEmail={setEmail}
+          firstName={firstName}
+          setFirstName={setFirstName}
+          lastName={lastName}
+          setLastName={setLastName}
+          handleLogin={handleLogin}
+        />
+      )}
 
-  return <h1>hello</h1>;
+      {isEligible && (
+        <AttendQuiz
+          title={title}
+          data={data}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+        />
+      )}
+    </div>
+  );
 };

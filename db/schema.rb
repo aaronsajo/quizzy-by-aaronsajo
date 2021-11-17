@@ -12,7 +12,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_15_145233) do
+ActiveRecord::Schema.define(version: 2021_11_16_200114) do
+
+  create_table "attempt_answers", force: :cascade do |t|
+    t.text "attempted_answer", null: false
+    t.integer "question_id", null: false
+    t.integer "attempt_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["attempt_id"], name: "index_attempt_answers_on_attempt_id"
+    t.index ["question_id"], name: "index_attempt_answers_on_question_id"
+  end
 
   create_table "attempts", force: :cascade do |t|
     t.boolean "submitted", default: false, null: false
@@ -63,6 +73,8 @@ ActiveRecord::Schema.define(version: 2021_11_15_145233) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "attempt_answers", "attempts"
+  add_foreign_key "attempt_answers", "questions"
   add_foreign_key "attempts", "quizzes"
   add_foreign_key "attempts", "users"
   add_foreign_key "options", "questions"
