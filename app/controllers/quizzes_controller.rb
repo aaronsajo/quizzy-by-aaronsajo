@@ -62,6 +62,10 @@ class QuizzesController < ApplicationController
     @title = quiz_slug ? quiz_slug.title : nil
   end
 
+  def report
+    @quizzes = @current_user.quizzes
+  end
+
   private
 
     def load_quiz

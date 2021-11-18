@@ -27,10 +27,8 @@ export const ResultPage = () => {
     setTitle(slugResponse.data.title);
 
     const questionResponse = await questionApi.list(slugResponse.data.id);
-    const filteredData = questionResponse.data.questions.filter(
-      (value, i) => i < response.data.attempt.attempted_answer.length
-    );
-    setData(filteredData);
+
+    setData(questionResponse.data.questions);
 
     setCorrectCount(response.data.attempt.correct_answer_count);
     setInCorrectCount(response.data.attempt.incorrect_answer_count);
@@ -55,48 +53,45 @@ export const ResultPage = () => {
         </Typography>
         {data.map((question, i) => {
           return (
-            question.id === attemptedQA[i].question_id &&
-            i <= attemptedQA.length && (
-              <div key={i}>
-                <div className="pb-10">
-                  <div className="flex pb-4">
-                    <Typography className="text-gray-600 ">
-                      Question {i + 1}
-                    </Typography>
-                    <Typography className="ml-12" style="h3">
-                      {question.description}
-                    </Typography>
-                  </div>
-                  <Radio className="ml-32 space-y-4 " stacked>
-                    {question.options.map((option, index) => (
-                      <div key={index} className="flex">
-                        <Radio.Item
-                          name={question.id}
-                          label={
-                            <>
-                              {option.content}
-                              {option.id == correctAnswerList[i].id && (
-                                <div className="flex  text-green-400 ml-4">
-                                  <Typography style="body2">
-                                    {" "}
-                                    Correct Answer
-                                  </Typography>
-                                  <CheckCircle className="mt-1" size={16} />
-                                </div>
-                              )}
-                            </>
-                          }
-                          value={option.id}
-                          disabled={true}
-                          checked={option.id == attemptedQA[i].attempted_answer}
-                          className="my-1"
-                        />
-                      </div>
-                    ))}
-                  </Radio>
+            <div key={i}>
+              <div className="pb-10">
+                <div className="flex pb-4">
+                  <Typography className="text-gray-600 ">
+                    Question {i + 1}
+                  </Typography>
+                  <Typography className="ml-12" style="h3">
+                    {question.description}
+                  </Typography>
                 </div>
+                <Radio className="ml-32 space-y-4 " stacked>
+                  {question.options.map((option, index) => (
+                    <div key={index} className="flex">
+                      <Radio.Item
+                        name={question.id}
+                        label={
+                          <>
+                            {option.content}
+                            {option.id == correctAnswerList[i]?.id && (
+                              <div className="flex  text-green-400 ml-4">
+                                <Typography style="body2">
+                                  {" "}
+                                  Correct Answer
+                                </Typography>
+                                <CheckCircle className="mt-1" size={16} />
+                              </div>
+                            )}
+                          </>
+                        }
+                        value={option.id}
+                        disabled={true}
+                        checked={option.id == attemptedQA[i]?.attempted_answer}
+                        className="my-1"
+                      />
+                    </div>
+                  ))}
+                </Radio>
               </div>
-            )
+            </div>
           );
         })}
       </div>
