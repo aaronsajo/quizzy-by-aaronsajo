@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.quizzes @quizzes do |quiz|
   json.attempts quiz.attempts do |attempt|
     json.quiz_name quiz.title
