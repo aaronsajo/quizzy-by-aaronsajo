@@ -10,12 +10,6 @@ class AttemptAnswersController < ApplicationController
       unless @attempt_answer.save!
         render status: :unprocessable_entity, json: { error: @attempt_answer.errors.full_messages.to_sentence }
       end
-      option = Option.find_by_id(attempt_data[:attempted_answer])
-      if option.answer
-        @correct_answer_count += 1
-      else
-        @incorrect_answer_count += 1
-      end
     end
     @attempt.update(submitted: true)
   end
