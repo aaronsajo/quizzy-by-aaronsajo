@@ -6,8 +6,10 @@ class AttemptAnswersController < ApplicationController
     @correct_answer_count = 0
     @incorrect_answer_count = 0
     answer_params[:attempts].each do |attempt_data|
-      attempt_answer = @attempt.attempt_answers.new(attempt_data)
-      attempt_answer.save!
+      @attempt_answer = @attempt.attempt_answers.new(attempt_data)
+      unless @attempt_answer.save!
+        render status: :unprocessable_entity, json: { error: @attempt_answer.errors.full_messages.to_sentence }
+      end
       option = Option.find_by_id(attempt_data[:attempted_answer])
       if option.answer
         @correct_answer_count += 1

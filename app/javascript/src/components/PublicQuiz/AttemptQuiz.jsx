@@ -34,7 +34,6 @@ export const AttemptQuiz = () => {
     setSelectedAnswer({ ...selectedAnswer, [name]: value });
   };
   const handleLogin = async () => {
-    setLoading(true);
     const response = await usersApi.login({
       user: {
         email: userDetails.email,
@@ -43,18 +42,18 @@ export const AttemptQuiz = () => {
       },
       quiz_id: quizId,
     });
+    setLoading(true);
     setAttemptId(response.data.attempt_id);
     if (!response.data.eligible) {
       window.location.assign(
         `/public/${slug}/result/${response.data.attempt_id}`
       );
     }
-    setIsLoggedIn(true);
     setLoading(false);
+    setIsLoggedIn(true);
   };
 
   const handleSubmit = async () => {
-    console;
     const result = Object.keys(selectedAnswer).map(key => ({
       question_id: key,
       attempted_answer: selectedAnswer[key],
@@ -74,9 +73,6 @@ export const AttemptQuiz = () => {
   useEffect(() => {
     checkSlug();
   }, []);
-  if (loading) {
-    return <h1>Loading...</h1>;
-  }
 
   if (isLoggedIn) {
     return (
@@ -89,16 +85,20 @@ export const AttemptQuiz = () => {
     );
   }
 
-  return (
-    <div>
-      (
-      <StandardLogin
-        title={title}
-        userDetails={userDetails}
-        setUserDetails={setUserDetails}
-        handleLogin={handleLogin}
-      />
-      )
-    </div>
-  );
+  if (!loading) {
+    return (
+      <div>
+        (
+        <StandardLogin
+          title={title}
+          userDetails={userDetails}
+          setUserDetails={setUserDetails}
+          handleLogin={handleLogin}
+        />
+        )
+      </div>
+    );
+  }
+
+  return <h1>Loading...</h1>;
 };

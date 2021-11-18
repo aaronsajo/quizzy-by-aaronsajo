@@ -24,7 +24,7 @@ export const ResultPage = () => {
     setAtemptedQA(response.data.attempt.attempted_answer);
     setCorrectAnswerList(response.data.attempt.correct_answer_list);
     const slugResponse = await quizzesApi.checkSlug(slug);
-    setTitle(response.data.title);
+    setTitle(slugResponse.data.title);
 
     const questionResponse = await questionApi.list(slugResponse.data.id);
     const filteredData = questionResponse.data.questions.filter(
@@ -41,7 +41,7 @@ export const ResultPage = () => {
   return (
     <div>
       <Navbar />
-      <div className="w-3/5 ml-16 mt-12">
+      <div className="w-4/5 ml-16 mt-12">
         <Typography style="h2" className="mb-8">
           {title}
         </Typography>
@@ -58,12 +58,12 @@ export const ResultPage = () => {
             question.id === attemptedQA[i].question_id &&
             i <= attemptedQA.length && (
               <div key={i}>
-                <div>
-                  <div className="flex">
-                    <Typography className="text-gray-600">
+                <div className="pb-10">
+                  <div className="flex pb-4">
+                    <Typography className="text-gray-600 ">
                       Question {i + 1}
                     </Typography>
-                    <Typography className="ml-12 " style="h3">
+                    <Typography className="ml-12" style="h3">
                       {question.description}
                     </Typography>
                   </div>
@@ -72,18 +72,25 @@ export const ResultPage = () => {
                       <div key={index} className="flex">
                         <Radio.Item
                           name={question.id}
-                          label={option.content}
+                          label={
+                            <>
+                              {option.content}
+                              {option.id == correctAnswerList[i].id && (
+                                <div className="flex  text-green-400 ml-4">
+                                  <Typography style="body2">
+                                    {" "}
+                                    Correct Answer
+                                  </Typography>
+                                  <CheckCircle className="mt-1" size={16} />
+                                </div>
+                              )}
+                            </>
+                          }
                           value={option.id}
                           disabled={true}
                           checked={option.id == attemptedQA[i].attempted_answer}
                           className="my-1"
                         />
-                        {option.id == correctAnswerList[i].id && (
-                          <div className="flex text-green-400">
-                            <span>Correct Answer</span>
-                            <CheckCircle />
-                          </div>
-                        )}
                       </div>
                     ))}
                   </Radio>
