@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class QuizzesController < ApplicationController
-  before_action :authenticate_user_using_x_auth_token
+  before_action :authenticate_user_using_x_auth_token, except: :check_slug
   before_action :load_quiz, only: [:destroy, :show, :update, :set_slug]
   def index
     @quizzes = @current_user.quizzes.order("created_at Desc")
@@ -56,12 +56,18 @@ class QuizzesController < ApplicationController
     @quiz.update(slug: slug)
   end
 
+  def check_slug
+    quiz_slug = Quiz.find_by(slug: params[:slug])
+    @id = quiz_slug ? quiz_slug.id : nil
+    @title = quiz_slug ? quiz_slug.title : nil
+  end
+
   private
 
     def load_quiz
       @quiz = @current_user.quizzes.find_by(id: params[:id])
       unless @quiz
-        render status: :not_found, json: { error: c }
+        render status: :not_found, json: { error: t("not_found", entity: "Quiz") }
       end
     end
 

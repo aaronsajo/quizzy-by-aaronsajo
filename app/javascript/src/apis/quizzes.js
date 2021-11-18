@@ -6,6 +6,7 @@ const update = ({ id, payload }) => axios.put(`/quizzes/${id}`, payload);
 const show = id => axios.get(`/quizzes/${id}`);
 const destroy = id => axios.delete(`/quizzes/${id}`);
 const createSlug = id => axios.get(`quizzes/slug/${id}`);
+const checkSlug = slug => axios.get(`public/quiz/${slug}`);
 const quizzesApi = {
   list,
   create,
@@ -13,6 +14,7 @@ const quizzesApi = {
   show,
   destroy,
   createSlug,
+  checkSlug,
 };
 
 export default quizzesApi;

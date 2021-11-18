@@ -106,7 +106,7 @@ export const ShowQuiz = () => {
             <Typography>
               Published, your public link is-{" "}
               <Link to={`/public/${slug}`} className=" text-blue-500 ">
-                http://localhost:3000/public/{`${slug}`}
+                {window.location.origin + "/public/" + slug}
               </Link>{" "}
             </Typography>
           )}

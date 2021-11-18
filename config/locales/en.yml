@@ -35,4 +35,5 @@ en:
   successfully_created: "%{entity} was successfully created!"
   successfully_updated: "%{entity} was successfully updated!"
   successfully_deleted: "%{entity} was successfully deleted!"
+  successfully_submited: "Quiz was successfully submited!"
   not_found: "%{entity} not found"
