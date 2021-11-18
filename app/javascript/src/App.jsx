@@ -11,6 +11,7 @@ import { getFromLocalStorage } from "helpers/storage";
 
 import { initializeLogger } from "./common/logger";
 import Dashboard from "./components/Dashboard";
+import { Report } from "./components/Dashboard/Report";
 import { AttemptQuiz } from "./components/PublicQuiz/AttemptQuiz";
 import { PublicDashboard } from "./components/PublicQuiz/PublicDashboard";
 import { ResultPage } from "./components/PublicQuiz/ResultPage";
@@ -44,6 +45,7 @@ const App = () => {
           <Route exact path="/quiz/edit/:id" component={EditQuiz} />
           <Route exact path="/quiz/:id/show" component={ShowQuiz} />
           <Route exact path="/public/:slug" component={PublicDashboard} />
+          <Route exact path="/report" component={Report} />
           <Route
             exact
             path="/public/:slug/result/:attemptId"

@@ -10,8 +10,17 @@ class AttemptAnswersController < ApplicationController
       unless @attempt_answer.save!
         render status: :unprocessable_entity, json: { error: @attempt_answer.errors.full_messages.to_sentence }
       end
+      option = Option.find_by_id(attempt_data[:attempted_answer])
+      if option.answer
+        @correct_answer_count += 1
+      end
     end
-    if @attempt.update(submitted: true)
+    quiz = Quiz.find_by_id(@attempt.quiz_id)
+    @incorrect_answer_count = quiz.questions.size - @correct_answer_count
+
+    if @attempt.update(
+      submitted: true, correct_answer_count: @correct_answer_count,
+      incorrect_answer_count: @incorrect_answer_count)
       render status: :ok, json: { notice: t("successfully_submited") }
     else
       render status: :unprocessable_entity, json: { error: @attempt.errors.full_messages.to_sentence }
