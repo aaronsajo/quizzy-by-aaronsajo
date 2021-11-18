@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Download } from "@bigbinary/neeto-icons";
 import { Button } from "@bigbinary/neetoui/v2";
 
+import ReportTable from "./ReportTable";
+
+import quizzesApi from "../../apis/quizzes";
 import Navbar from "../Navbar";
 
 export const Report = () => {
+  const [data, setData] = useState([]);
+  const fetchDetails = async () => {
+    const response = await quizzesApi.report();
+    const unfilteredData = response.data.quizzes;
+    const filteredData = unfilteredData
+      .map(quizData => {
+        return quizData.attempts;
+      })
+      .flat();
+    setData(filteredData);
+  };
+
+  useEffect(() => {
+    fetchDetails();
+  }, []);
+
   return (
     <div>
       <Navbar />
@@ -21,6 +40,7 @@ export const Report = () => {
           />
         </div>
         <h2 className="text-gray-600">Reports</h2>
+        <ReportTable reportData={data} />
       </div>
     </div>
   );

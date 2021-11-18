@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   end
   get "quizzes/slug/:id", to: "quizzes#set_slug"
   get "public/quiz/:slug", to: "quizzes#check_slug"
+  get "quiz/report", to: "quizzes#report"
   root "home#index"
   get "*path", to: "home#index", via: :all
 end

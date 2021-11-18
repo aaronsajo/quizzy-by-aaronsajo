@@ -38,7 +38,7 @@ const Navbar = () => {
           {userName && (
             <div className="flex items-center justify-end gap-x-4">
               <Link
-                to="/report"
+                to="/quiz/report"
                 className="inline-flex items-center px-1 pt-1 mr-3
                    font-semibold text-lg leading-5
                    text-black "
