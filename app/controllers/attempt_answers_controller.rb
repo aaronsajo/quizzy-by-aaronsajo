@@ -11,7 +11,11 @@ class AttemptAnswersController < ApplicationController
         render status: :unprocessable_entity, json: { error: @attempt_answer.errors.full_messages.to_sentence }
       end
     end
-    @attempt.update(submitted: true)
+    if @attempt.update(submitted: true)
+      render status: :ok, json: { notice: t("successfully_submited") }
+    else
+      render status: :unprocessable_entity, json: { error: @attempt.errors.full_messages.to_sentence }
+    end
   end
 
   private

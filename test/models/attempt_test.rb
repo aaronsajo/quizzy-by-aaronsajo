@@ -27,7 +27,7 @@ class AttemptTest < ActiveSupport::TestCase
     assert @attempt.valid?
   end
 
-  def test_attempt_submitted_has_default_false
+  def test_attempt_submitted_default_false
     assert_equal @attempt.submitted, false
   end
 
