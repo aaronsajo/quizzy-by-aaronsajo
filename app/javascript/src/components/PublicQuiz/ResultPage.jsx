@@ -20,18 +20,22 @@ export const ResultPage = () => {
   const [correctAnswerList, setCorrectAnswerList] = useState([]);
 
   const fetchData = async () => {
-    const response = await attemptApi.show(attemptId);
-    setAtemptedQA(response.data.attempt.attempted_answer);
-    setCorrectAnswerList(response.data.attempt.correct_answer_list);
-    const slugResponse = await quizzesApi.checkSlug(slug);
-    setTitle(slugResponse.data.title);
+    try {
+      const response = await attemptApi.show(attemptId);
+      setAtemptedQA(response.data.attempt.attempted_answer);
+      setCorrectAnswerList(response.data.attempt.correct_answer_list);
+      const slugResponse = await quizzesApi.checkSlug(slug);
+      setTitle(slugResponse.data.title);
 
-    const questionResponse = await questionApi.list(slugResponse.data.id);
+      const questionResponse = await questionApi.list(slugResponse.data.id);
 
-    setData(questionResponse.data.questions);
+      setData(questionResponse.data.questions);
 
-    setCorrectCount(response.data.attempt.correct_answer_count);
-    setInCorrectCount(response.data.attempt.incorrect_answer_count);
+      setCorrectCount(response.data.attempt.correct_answer_count);
+      setInCorrectCount(response.data.attempt.incorrect_answer_count);
+    } catch (error) {
+      logger.error(error);
+    }
   };
   useEffect(() => {
     fetchData();

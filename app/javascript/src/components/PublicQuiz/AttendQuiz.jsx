@@ -10,8 +10,12 @@ export const AttendQuiz = ({ title, handleSubmit, quizId, handleChange }) => {
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
-    const questionResponse = await questionApi.list(quizId);
-    setData(questionResponse.data.questions);
+    try {
+      const questionResponse = await questionApi.list(quizId);
+      setData(questionResponse.data.questions);
+    } catch (error) {
+      logger.error(error);
+    }
   };
   useEffect(() => {
     fetchData();

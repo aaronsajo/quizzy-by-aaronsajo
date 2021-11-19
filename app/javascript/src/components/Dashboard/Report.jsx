@@ -11,14 +11,18 @@ import Navbar from "../Navbar";
 export const Report = () => {
   const [data, setData] = useState([]);
   const fetchDetails = async () => {
-    const response = await quizzesApi.report();
-    const unfilteredData = response.data.quizzes;
-    const filteredData = unfilteredData
-      .map(quizData => {
-        return quizData.attempts;
-      })
-      .flat();
-    setData(filteredData);
+    try {
+      const response = await quizzesApi.report();
+      const unfilteredData = response.data.quizzes;
+      const filteredData = unfilteredData
+        .map(quizData => {
+          return quizData.attempts;
+        })
+        .flat();
+      setData(filteredData);
+    } catch (error) {
+      logger.error(error);
+    }
   };
 
   useEffect(() => {

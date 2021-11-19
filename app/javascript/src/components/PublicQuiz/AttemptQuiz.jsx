@@ -24,9 +24,13 @@ export const AttemptQuiz = () => {
   const [selectedAnswer, setSelectedAnswer] = useState({});
 
   const checkSlug = async () => {
-    const response = await quizzesApi.checkSlug(slug);
-    setTitle(response.data.title);
-    setQuizId(response.data.id);
+    try {
+      const response = await quizzesApi.checkSlug(slug);
+      setTitle(response.data.title);
+      setQuizId(response.data.id);
+    } catch (error) {
+      logger.error(error);
+    }
   };
   const handleChange = e => {
     const name = e.target.name;
@@ -34,23 +38,28 @@ export const AttemptQuiz = () => {
     setSelectedAnswer({ ...selectedAnswer, [name]: value });
   };
   const handleLogin = async () => {
-    const response = await usersApi.login({
-      user: {
-        email: userDetails.email,
-        first_name: userDetails.firstName,
-        last_name: userDetails.lastName,
-      },
-      quiz_id: quizId,
-    });
-    setLoading(true);
-    setAttemptId(response.data.attempt_id);
-    if (!response.data.eligible) {
-      window.location.assign(
-        `/public/${slug}/result/${response.data.attempt_id}`
-      );
+    try {
+      setLoading(true);
+      const response = await usersApi.login({
+        user: {
+          email: userDetails.email,
+          first_name: userDetails.firstName,
+          last_name: userDetails.lastName,
+        },
+        quiz_id: quizId,
+      });
+      setAttemptId(response.data.attempt_id);
+      if (!response.data.eligible) {
+        window.location.assign(
+          `/public/${slug}/result/${response.data.attempt_id}`
+        );
+      }
+      setIsLoggedIn(true);
+      setLoading(false);
+    } catch (error) {
+      logger.error(error);
+      setLoading(false);
     }
-    setLoading(false);
-    setIsLoggedIn(true);
   };
 
   const handleSubmit = async () => {
@@ -65,14 +74,20 @@ export const AttemptQuiz = () => {
         attempts: result,
       },
     };
-    await attemptAnswerApi.create(payload);
-
-    window.location.assign(`/public/${slug}/result/${attemptId}`);
+    try {
+      await attemptAnswerApi.create(payload);
+      window.location.assign(`/public/${slug}/result/${attemptId}`);
+    } catch (error) {
+      logger.error(error);
+    }
   };
 
   useEffect(() => {
     checkSlug();
   }, []);
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
 
   if (isLoggedIn) {
     return (
@@ -85,20 +100,16 @@ export const AttemptQuiz = () => {
     );
   }
 
-  if (!loading) {
-    return (
-      <div>
-        (
-        <StandardLogin
-          title={title}
-          userDetails={userDetails}
-          setUserDetails={setUserDetails}
-          handleLogin={handleLogin}
-        />
-        )
-      </div>
-    );
-  }
-
-  return <h1>Loading...</h1>;
+  return (
+    <div>
+      (
+      <StandardLogin
+        title={title}
+        userDetails={userDetails}
+        setUserDetails={setUserDetails}
+        handleLogin={handleLogin}
+      />
+      )
+    </div>
+  );
 };

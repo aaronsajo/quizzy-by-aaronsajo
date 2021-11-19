@@ -80,18 +80,21 @@ export const EditQuestions = () => {
       deletedOptions.forEach(deletedData => {
         data.push(deletedData);
       });
-
-      await questionApi.update({
-        id,
-        payload: {
-          question: {
-            description: question,
-            quiz_id: quizid,
-            options_attributes: data,
+      try {
+        await questionApi.update({
+          id,
+          payload: {
+            question: {
+              description: question,
+              quiz_id: quizid,
+              options_attributes: data,
+            },
           },
-        },
-      });
-      window.location.href = `/quiz/${quizid}/show`;
+        });
+        window.location.href = `/quiz/${quizid}/show`;
+      } catch (error) {
+        logger.error(error);
+      }
     }
   };
 

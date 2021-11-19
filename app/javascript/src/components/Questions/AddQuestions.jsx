@@ -36,15 +36,18 @@ export const AddQuestions = () => {
           answer: String(answer && answer.value === Object.keys(val)[0]),
         };
       });
-
-      await questionApi.create({
-        question: {
-          description: question,
-          quiz_id: id,
-          options_attributes: data,
-        },
-      });
-      window.location.href = `/quiz/${id}/show`;
+      try {
+        await questionApi.create({
+          question: {
+            description: question,
+            quiz_id: id,
+            options_attributes: data,
+          },
+        });
+        window.location.href = `/quiz/${id}/show`;
+      } catch (error) {
+        logger.error(error);
+      }
     }
   };
   const handleClose = (opt, index) => {
