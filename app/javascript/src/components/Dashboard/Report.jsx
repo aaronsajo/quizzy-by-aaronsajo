@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 
 import { Download } from "@bigbinary/neeto-icons";
 import { Button } from "@bigbinary/neetoui/v2";
+import { PageLoader } from "@bigbinary/neetoui/v2";
 
-import usersApi from "apis/users";
+import reportsApi from "apis/reports";
 
 import ReportTable from "./ReportTable";
 
@@ -30,10 +31,10 @@ export const Report = () => {
   const handleReportDownload = async () => {
     try {
       setLoading(true);
-      const reponse = await usersApi.report_export();
+      const reponse = await reportsApi.report_export();
       const jobId = reponse.data.jid;
       const interval = setInterval(async () => {
-        const jobStatus = await usersApi.export_status(jobId);
+        const jobStatus = await reportsApi.export_status(jobId);
         if (jobStatus.data.status === "complete") {
           setLoading(false);
           clearInterval(interval);
@@ -49,7 +50,14 @@ export const Report = () => {
     fetchDetails();
   }, []);
   if (loading) {
-    return <h1>Loading...</h1>;
+    return (
+      <div>
+        <Navbar />
+        <div className="flex justify-center mt-32">
+          <PageLoader />
+        </div>
+      </div>
+    );
   }
 
   return (

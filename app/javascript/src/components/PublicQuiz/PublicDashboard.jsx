@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Typography } from "@bigbinary/neetoui/v2";
+import { PageLoader } from "@bigbinary/neetoui/v2";
 import { useParams } from "react-router-dom";
 
 import quizzesApi from "apis/quizzes";
@@ -29,7 +30,14 @@ export const PublicDashboard = () => {
     checkSlug();
   }, []);
   if (loading) {
-    return <h1 className="flex justify-center mt-40">Loading...</h1>;
+    return (
+      <div>
+        <Navbar />
+        <div className="flex justify-center mt-40">
+          <PageLoader />
+        </div>
+      </div>
+    );
   }
 
   return (

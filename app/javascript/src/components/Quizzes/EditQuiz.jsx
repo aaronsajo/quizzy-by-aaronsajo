@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { Input, Button } from "@bigbinary/neetoui/v2";
+import { PageLoader } from "@bigbinary/neetoui/v2";
 import { useParams } from "react-router-dom";
 
 import quizzesApi from "apis/quizzes";
@@ -42,8 +43,11 @@ const EditQuiz = () => {
 
   if (pageLoading) {
     return (
-      <div className="w-screen h-screen">
-        <h2>Loading...</h2>
+      <div>
+        <Navbar />
+        <div className="w-screen h-screen">
+          <PageLoader />
+        </div>
       </div>
     );
   }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Plus } from "@bigbinary/neeto-icons";
 import { Button } from "@bigbinary/neetoui/v2";
+import { PageLoader } from "@bigbinary/neetoui/v2";
 
 import quizzesApi from "apis/quizzes";
 
@@ -31,7 +32,9 @@ const Dashboard = () => {
     return (
       <div>
         <Navbar />
-        <h1>Loading...</h1>
+        <div className="mt-48">
+          <PageLoader />
+        </div>
       </div>
     );
   }

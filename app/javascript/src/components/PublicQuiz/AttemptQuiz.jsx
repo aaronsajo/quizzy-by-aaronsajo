@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { PageLoader } from "@bigbinary/neetoui/v2";
 import { useParams } from "react-router-dom";
 
 import attemptAnswerApi from "apis/attempts_answers";
@@ -8,6 +9,8 @@ import usersApi from "apis/users";
 
 import { AttendQuiz } from "./AttendQuiz";
 import { StandardLogin } from "./StandardLogin";
+
+import Navbar from "../Navbar";
 
 export const AttemptQuiz = () => {
   const { slug } = useParams();
@@ -53,9 +56,10 @@ export const AttemptQuiz = () => {
         window.location.assign(
           `/public/${slug}/result/${response.data.attempt_id}`
         );
+      } else {
+        setIsLoggedIn(true);
+        setLoading(false);
       }
-      setIsLoggedIn(true);
-      setLoading(false);
     } catch (error) {
       logger.error(error);
       setLoading(false);
@@ -86,30 +90,37 @@ export const AttemptQuiz = () => {
     checkSlug();
   }, []);
   if (loading) {
-    return <h1>Loading...</h1>;
+    return (
+      <div>
+        <Navbar />
+        <div className="mt-32">
+          <PageLoader />
+        </div>
+      </div>
+    );
   }
 
-  if (isLoggedIn) {
+  if (!isLoggedIn) {
     return (
-      <AttendQuiz
-        title={title}
-        handleSubmit={handleSubmit}
-        quizId={quizId}
-        handleChange={handleChange}
-      />
+      <div>
+        (
+        <StandardLogin
+          title={title}
+          userDetails={userDetails}
+          setUserDetails={setUserDetails}
+          handleLogin={handleLogin}
+        />
+        )
+      </div>
     );
   }
 
   return (
-    <div>
-      (
-      <StandardLogin
-        title={title}
-        userDetails={userDetails}
-        setUserDetails={setUserDetails}
-        handleLogin={handleLogin}
-      />
-      )
-    </div>
+    <AttendQuiz
+      title={title}
+      handleSubmit={handleSubmit}
+      quizId={quizId}
+      handleChange={handleChange}
+    />
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { Input, Button } from "@bigbinary/neetoui/v2";
+import { PageLoader } from "@bigbinary/neetoui/v2";
 
 import quizzesApi from "apis/quizzes";
 
@@ -21,7 +22,16 @@ const CreateQuiz = ({ history }) => {
       setLoading(false);
     }
   };
-  if (loading) <h1>Loading...</h1>;
+  if (loading) {
+    return (
+      <div>
+        <Navbar />
+        <div>
+          <PageLoader />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
