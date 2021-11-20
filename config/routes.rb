@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   get "quizzes/slug/:id", to: "quizzes#set_slug"
   get "public/quiz/:slug", to: "quizzes#check_slug"
   get "quiz/report", to: "quizzes#report"
+  get "/export", to: "users#export"
+  get "/export_status/:id", to: "users#export_status"
+  get "/export_download/:id", to: "users#export_download"
   root "home#index"
   get "*path", to: "home#index", via: :all
 end

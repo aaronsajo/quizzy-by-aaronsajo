@@ -25,6 +25,31 @@ class UsersController < ApplicationController
     end
   end
 
+  def export
+    job_id = ExportReportWorker.perform_async
+
+    render json: {
+      jid: job_id
+    }
+  end
+
+  def export_status
+    job_id = params[:id]
+    job_status = Sidekiq::Status.get_all(job_id).symbolize_keys
+    puts job_status[:status]
+    render json: {
+      status: job_status[:status],
+      percentage: job_status[:pct_complete]
+    }
+  end
+
+  def export_download
+    job_id = params[:id]
+    exported_file_name = "report_export_#{job_id}.xlsx"
+    filename = "ReportData_#{DateTime.now.strftime("%Y%m%d_%H%M%S")}.xlsx"
+    send_file Rails.root.join("tmp", exported_file_name), type: :xlsx, filename: filename
+  end
+
   private
 
     def user_params

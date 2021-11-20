@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Download } from "@bigbinary/neeto-icons";
 import { Button } from "@bigbinary/neetoui/v2";
 
+import usersApi from "apis/users";
+
 import ReportTable from "./ReportTable";
 
 import quizzesApi from "../../apis/quizzes";
@@ -10,6 +12,7 @@ import Navbar from "../Navbar";
 
 export const Report = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const fetchDetails = async () => {
     try {
       const response = await quizzesApi.report();
@@ -24,10 +27,30 @@ export const Report = () => {
       logger.error(error);
     }
   };
-
+  const handleReportDownload = async () => {
+    try {
+      setLoading(true);
+      const reponse = await usersApi.report_export();
+      const jobId = reponse.data.jid;
+      const interval = setInterval(async () => {
+        const jobStatus = await usersApi.export_status(jobId);
+        if (jobStatus.data.status === "complete") {
+          setLoading(false);
+          clearInterval(interval);
+          window.location.href = `/export_download/${jobId}`;
+        }
+      }, 1000);
+    } catch (err) {
+      logger.error(err);
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     fetchDetails();
   }, []);
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <div>
@@ -40,7 +63,7 @@ export const Report = () => {
             icon={Download}
             iconPosition="left"
             style="secondary"
-            to="/"
+            onClick={handleReportDownload}
           />
         </div>
         <h2 className="text-gray-600">Reports</h2>
