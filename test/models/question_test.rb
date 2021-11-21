@@ -20,7 +20,7 @@ class QuestionTest < ActiveSupport::TestCase
 
   def test_question_should_be_invalid_without_options
     assert @question.invalid?
-    assert_includes @question.errors.full_messages, "Options Length should be less than 4 and more than 2"
+    assert_includes @question.errors.full_messages, "Options Length should be less than 5 and more than 1"
   end
 
   def test_question_should_be_invalid_with_more_than_four_options
@@ -30,7 +30,7 @@ class QuestionTest < ActiveSupport::TestCase
     option4 = @question.options.new(content: "sugar", answer: false)
     option5 = @question.options.new(content: "calcium", answer: false)
     assert @question.invalid?
-    assert_includes @question.errors.full_messages, "Options Length should be less than 4 and more than 2"
+    assert_includes @question.errors.full_messages, "Options Length should be less than 5 and more than 1"
   end
 
   def test_question_description_should_be_present

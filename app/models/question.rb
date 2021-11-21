@@ -12,7 +12,7 @@ class Question < ApplicationRecord
 
     def check_option_length
       unless options.length <= 4 && options.length >= 2
-        errors.add(:options, "Length should be less than 4 and more than 2")
+        errors.add(:options, "Length should be less than 5 and more than 1")
       end
     end
 end

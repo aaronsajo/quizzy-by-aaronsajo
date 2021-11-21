@@ -14,7 +14,6 @@ class ReportsController < ApplicationController
   def export_status
     job_id = params[:id]
     job_status = Sidekiq::Status.get_all(job_id).symbolize_keys
-    puts job_status[:status]
     render json: {
       status: job_status[:status],
       percentage: job_status[:pct_complete]

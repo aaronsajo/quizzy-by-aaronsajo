@@ -9,10 +9,5 @@ class AttemptsController < ApplicationController
       correct_option = question.options.find_by(answer: true)
       @answer_list << correct_option
     end
-    # @attempt.attempt_answers.each do |attempt_answer_data|
-    #   question = Question.find_by_id(attempt_answer_data[:question_id])
-    #   correct_option = question.options.find_by(answer: true)
-    #   @answer_list << correct_option
-    # end
   end
 end
