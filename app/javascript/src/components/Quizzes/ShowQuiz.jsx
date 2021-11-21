@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Plus } from "@bigbinary/neeto-icons";
-import { CheckCircle, Delete, Edit } from "@bigbinary/neeto-icons";
+import { CheckCircle, Delete, Edit, Plus } from "@bigbinary/neeto-icons";
 import { Button, Typography } from "@bigbinary/neetoui/v2";
 import { useParams, Link } from "react-router-dom";
 

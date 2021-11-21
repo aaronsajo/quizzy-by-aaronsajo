@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Download } from "@bigbinary/neeto-icons";
-import { Button } from "@bigbinary/neetoui/v2";
-import { PageLoader } from "@bigbinary/neetoui/v2";
-
-import reportsApi from "apis/reports";
+import { Button, PageLoader } from "@bigbinary/neetoui/v2";
 
 import ReportTable from "./ReportTable";
 
@@ -16,6 +13,7 @@ export const Report = () => {
   const [loading, setLoading] = useState(false);
   const fetchDetails = async () => {
     try {
+      setLoading(true);
       const response = await quizzesApi.report();
       const unfilteredData = response.data.quizzes;
       const filteredData = unfilteredData
@@ -24,28 +22,13 @@ export const Report = () => {
         })
         .flat();
       setData(filteredData);
+      setLoading(false);
     } catch (error) {
       logger.error(error);
-    }
-  };
-  const handleReportDownload = async () => {
-    try {
-      setLoading(true);
-      const reponse = await reportsApi.report_export();
-      const jobId = reponse.data.jid;
-      const interval = setInterval(async () => {
-        const jobStatus = await reportsApi.export_status(jobId);
-        if (jobStatus.data.status === "complete") {
-          setLoading(false);
-          clearInterval(interval);
-          window.location.href = `/export_download/${jobId}`;
-        }
-      }, 1000);
-    } catch (err) {
-      logger.error(err);
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchDetails();
   }, []);
@@ -71,7 +54,8 @@ export const Report = () => {
             icon={Download}
             iconPosition="left"
             style="secondary"
-            onClick={handleReportDownload}
+            to="/quiz/attempt/report/download"
+            // onClick={handleReportDownload}
           />
         </div>
         <h2 className="text-gray-600">Reports</h2>

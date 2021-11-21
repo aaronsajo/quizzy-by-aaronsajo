@@ -5,7 +5,7 @@ class ExportReportWorker
   include Sidekiq::Status::Worker
 
   def perform(current_user_id)
-    sleep 8
+    sleep 6
     @attempts = []
     @current_user = User.find_by_id(current_user_id)
     @current_user.quizzes.each do |quiz|

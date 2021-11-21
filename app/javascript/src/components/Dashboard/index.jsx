@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { Plus } from "@bigbinary/neeto-icons";
-import { Button } from "@bigbinary/neetoui/v2";
-import { PageLoader } from "@bigbinary/neetoui/v2";
+import { Button, PageLoader } from "@bigbinary/neetoui/v2";
 
 import quizzesApi from "apis/quizzes";
 

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-import { Input, Button } from "@bigbinary/neetoui/v2";
-import { PageLoader } from "@bigbinary/neetoui/v2";
+import { Input, Button, PageLoader } from "@bigbinary/neetoui/v2";
 
 import quizzesApi from "apis/quizzes";
 

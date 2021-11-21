@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Typography } from "@bigbinary/neetoui/v2";
-import { PageLoader } from "@bigbinary/neetoui/v2";
+import { Typography, PageLoader } from "@bigbinary/neetoui/v2";
 import { useParams } from "react-router-dom";
 
 import quizzesApi from "apis/quizzes";
