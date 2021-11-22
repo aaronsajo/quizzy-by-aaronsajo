@@ -74,7 +74,7 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
     }, headers: @user_header
     assert_response :unprocessable_entity
     response_json = response.parsed_body
-    assert_equal response_json["error"], "Options Length should be less than 5 and more than 1"
+    assert_equal response_json["error"], "Options is too short (minimum is 2 characters)"
   end
 
   def test_should_update_question_description
