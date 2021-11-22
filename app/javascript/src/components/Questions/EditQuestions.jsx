@@ -87,6 +87,7 @@ export const EditQuestions = () => {
         data.push(deletedData);
       });
       try {
+        setLoading(true);
         await questionApi.update({
           id,
           payload: {
@@ -98,6 +99,7 @@ export const EditQuestions = () => {
           },
         });
         window.location.href = `/quiz/${quizid}/show`;
+        setLoading(false);
       } catch (error) {
         logger.error(error);
       }
