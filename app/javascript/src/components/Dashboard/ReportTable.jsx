@@ -22,7 +22,7 @@ const ReportTable = ({ reportData }) => {
     tableInstance;
 
   return (
-    <div className="w-8/12   my-10  ml-16 flex flex-col  ">
+    <div className="w-10/12  my-10  ml-16 flex flex-col  ">
       <table
         {...getTableProps()}
         className="border-2 border-black w-full items-center"

@@ -16,6 +16,7 @@ export const EditQuestions = () => {
   const [answer, setAnswer] = useState(null);
   const [title, setTitle] = useState("");
   const [deletedOptions, setDeletedOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const setOptionAndAnswer = optionArray => {
     const requiredOption = optionArray.map((option, index) => {
@@ -38,13 +39,16 @@ export const EditQuestions = () => {
   };
   const fetchQuestionDeatils = async () => {
     try {
+      setLoading(true);
       const response = await questionApi.show(id);
       setQuestion(response.data.question.description);
       setTitle(response.data.question.quiz);
       const optionArray = response.data.question.options;
       setOptionAndAnswer(optionArray);
+      setLoading(false);
     } catch (error) {
       logger.error(error);
+      setLoading(false);
     }
   };
 
@@ -55,9 +59,11 @@ export const EditQuestions = () => {
   };
 
   const handleSubmit = async () => {
-    if (question === "") {
+    if (question.trim().length === 0) {
       toast.error("Question Can't be blank", TOASTR_OPTIONS);
-    } else if (Object.values(options).includes("")) {
+    } else if (
+      options.some(option => Object.values(option)[0].trim().length === 0)
+    ) {
       toast.error("Option Can't be blank", TOASTR_OPTIONS);
     } else if (answer === null) {
       toast.error("Select an answer", TOASTR_OPTIONS);
@@ -145,6 +151,7 @@ export const EditQuestions = () => {
         handleClose={handleClose}
         handleOptions={handleOptions}
         handleSubmit={handleSubmit}
+        loading={loading}
       />
     </div>
   );

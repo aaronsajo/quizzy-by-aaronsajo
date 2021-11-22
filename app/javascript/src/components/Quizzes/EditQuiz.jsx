@@ -54,16 +54,17 @@ const EditQuiz = () => {
   return (
     <div>
       <Navbar />
-      <form className="max-w-lg mx-auto mt-10">
+      <form className="max-w-lg mx-auto mt-10" onSubmit={handleSubmit}>
         <h1 className="mb-5">Change Quiz Name</h1>
         <Input
           label="New Quiz Name:"
           placeholder="Quiz Title (Max 50 Characters Allowed)"
           value={title}
           onChange={e => setTitle(e.target.value)}
+          required="required"
           className="mb-5"
         />
-        <Button label="Submit" onClick={handleSubmit} />
+        <Button label="Submit" type="submit" />
       </form>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { CheckCircle } from "@bigbinary/neeto-icons";
-import { Typography, Radio } from "@bigbinary/neetoui/v2";
+import { Typography, Radio, PageLoader } from "@bigbinary/neetoui/v2";
 import { useParams } from "react-router-dom";
 
 import attemptApi from "apis/attempts";
@@ -18,9 +18,11 @@ export const ResultPage = () => {
   const [inCorrectCount, setInCorrectCount] = useState(null);
   const [attemptedQA, setAtemptedQA] = useState([]);
   const [correctAnswerList, setCorrectAnswerList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       const response = await attemptApi.show(attemptId);
       setAtemptedQA(response.data.attempt.attempted_answer);
       setCorrectAnswerList(response.data.attempt.correct_answer_list);
@@ -33,13 +35,26 @@ export const ResultPage = () => {
 
       setCorrectCount(response.data.attempt.correct_answer_count);
       setInCorrectCount(response.data.attempt.incorrect_answer_count);
+      setLoading(false);
     } catch (error) {
       logger.error(error);
+      setLoading(false);
     }
   };
   useEffect(() => {
     fetchData();
   }, []);
+  if (loading) {
+    return (
+      <div>
+        <Navbar />
+        <div className="flex justify-center mt-40">
+          <PageLoader />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Navbar />

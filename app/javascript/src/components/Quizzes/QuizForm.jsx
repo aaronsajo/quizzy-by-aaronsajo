@@ -35,7 +35,7 @@ const CreateQuiz = ({ history }) => {
   return (
     <div>
       <Navbar />
-      <form className="max-w-lg mx-auto mt-10">
+      <form className="max-w-lg mx-auto mt-10" onSubmit={handleSubmit}>
         <h1 className="mb-5">Add new Quiz</h1>
         <Input
           label="Quiz Name"
@@ -43,8 +43,9 @@ const CreateQuiz = ({ history }) => {
           value={title}
           onChange={e => setTitle(e.target.value)}
           className="mb-5"
+          required="required"
         />
-        <Button label="Submit" onClick={handleSubmit} />
+        <Button label="Submit" type="submit" />
       </form>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Typography, Radio, Button } from "@bigbinary/neetoui/v2";
+import { Typography, Radio, Button, PageLoader } from "@bigbinary/neetoui/v2";
 
 import { questionApi } from "apis/questions";
 
@@ -8,18 +8,32 @@ import Navbar from "../Navbar";
 
 export const AttendQuiz = ({ title, handleSubmit, quizId, handleChange }) => {
   const [data, setData] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const fetchData = async () => {
     try {
+      setLoading(true);
       const questionResponse = await questionApi.list(quizId);
       setData(questionResponse.data.questions);
+      setLoading(false);
     } catch (error) {
       logger.error(error);
+      setLoading(false);
     }
   };
   useEffect(() => {
     fetchData();
   }, []);
+  if (loading) {
+    return (
+      <div>
+        <Navbar />
+        <div className="flex justify-center mt-40">
+          <PageLoader />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Navbar />

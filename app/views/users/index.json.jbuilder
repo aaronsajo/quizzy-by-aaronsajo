@@ -1,12 +1,9 @@
+# frozen_string_literal: true
 
 json.userdetails @users do |user|
   json
 
 end
-
-
-
-
 
 json.attempt do
   json.attempted_answer @attempt.attempt_answers do |attempted_answer_data|

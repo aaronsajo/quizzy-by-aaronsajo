@@ -14,8 +14,8 @@ const Dashboard = () => {
 
   const fetchQuizzes = async () => {
     try {
+      setLoading(true);
       const response = await quizzesApi.list();
-
       setQuizzes(response.data.quizzes);
       setLoading(false);
     } catch (error) {
