@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import { Plus } from "@bigbinary/neeto-icons";
-import { CheckCircle, Delete, Edit } from "@bigbinary/neeto-icons";
-import { Button, Typography } from "@bigbinary/neetoui/v2";
+import { CheckCircle, Delete, Edit, Plus } from "@bigbinary/neeto-icons";
+import { Button, Typography, PageLoader } from "@bigbinary/neetoui/v2";
 import { useParams, Link } from "react-router-dom";
 
 import { questionApi } from "apis/questions";
@@ -18,6 +17,7 @@ export const ShowQuiz = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [slug, setSlug] = useState(null);
+  const [loading, setLoading] = useState(false);
   const deleteQuestion = async () => {
     try {
       await questionApi.destroy(deleteId);
@@ -29,12 +29,15 @@ export const ShowQuiz = () => {
   };
   const fetchQuizDeatils = async () => {
     try {
+      setLoading(true);
       const response = await quizzesApi.show(id);
       setTitle(response.data.quiz.title);
       setQuestions(response.data.quiz.questions);
       setSlug(response.data.quiz.slug);
+      setLoading(false);
     } catch (error) {
       logger.error(error);
+      setLoading(false);
     }
   };
   const handlePublish = async () => {
@@ -45,6 +48,17 @@ export const ShowQuiz = () => {
   useEffect(() => {
     fetchQuizDeatils();
   }, []);
+  if (loading) {
+    return (
+      <div>
+        <Navbar />
+        <div className="flex justify-center mt-40">
+          <PageLoader />
+        </div>
+      </div>
+    );
+  }
+
   if (questions.length <= 0) {
     return (
       <div>

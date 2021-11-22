@@ -16,6 +16,7 @@ export const AddQuestions = () => {
   const [answer, setAnswer] = useState(null);
   const [title, setTitle] = useState("");
   const { id } = useParams();
+  const [loading, setLoading] = useState(false);
 
   const handleOptions = () => {
     const newOption = "opt" + `${options.length + 1}`;
@@ -23,9 +24,11 @@ export const AddQuestions = () => {
     setOptions(opt => [...opt, { [newOption]: "" }]);
   };
   const handleSubmit = async () => {
-    if (question === "") {
+    if (question.trim().length === 0) {
       toast.error("Question Can't be blank", TOASTR_OPTIONS);
-    } else if (Object.values(options).includes("")) {
+    } else if (
+      options.some(option => Object.values(option)[0].trim().length === 0)
+    ) {
       toast.error("Option Can't be blank", TOASTR_OPTIONS);
     } else if (answer === null) {
       toast.error("Select an answer", TOASTR_OPTIONS);
@@ -36,15 +39,22 @@ export const AddQuestions = () => {
           answer: String(answer && answer.value === Object.keys(val)[0]),
         };
       });
+      try {
+        setLoading(true);
+        await questionApi.create({
+          question: {
+            description: question,
+            quiz_id: id,
+            options_attributes: data,
+          },
+        });
 
-      await questionApi.create({
-        question: {
-          description: question,
-          quiz_id: id,
-          options_attributes: data,
-        },
-      });
-      window.location.href = `/quiz/${id}/show`;
+        window.location.href = `/quiz/${id}/show`;
+        setLoading(false);
+      } catch (error) {
+        logger.error(error);
+        setLoading(false);
+      }
     }
   };
   const handleClose = (opt, index) => {
@@ -72,10 +82,13 @@ export const AddQuestions = () => {
 
   const fetchQuizDetails = async () => {
     try {
+      setLoading(true);
       const response = await quizzesApi.show(id);
       setTitle(response.data.quiz.title);
+      setLoading(false);
     } catch (error) {
       logger.error(error);
+      setLoading(false);
     }
   };
 
@@ -94,6 +107,7 @@ export const AddQuestions = () => {
       handleClose={handleClose}
       handleOptions={handleOptions}
       handleSubmit={handleSubmit}
+      loading={loading}
     />
   );
 };

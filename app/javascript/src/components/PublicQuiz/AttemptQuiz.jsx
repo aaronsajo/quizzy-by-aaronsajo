@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { PageLoader } from "@bigbinary/neetoui/v2";
 import { useParams } from "react-router-dom";
 
 import attemptAnswerApi from "apis/attempts_answers";
@@ -8,6 +9,8 @@ import usersApi from "apis/users";
 
 import { AttendQuiz } from "./AttendQuiz";
 import { StandardLogin } from "./StandardLogin";
+
+import Navbar from "../Navbar";
 
 export const AttemptQuiz = () => {
   const { slug } = useParams();
@@ -24,9 +27,13 @@ export const AttemptQuiz = () => {
   const [selectedAnswer, setSelectedAnswer] = useState({});
 
   const checkSlug = async () => {
-    const response = await quizzesApi.checkSlug(slug);
-    setTitle(response.data.title);
-    setQuizId(response.data.id);
+    try {
+      const response = await quizzesApi.checkSlug(slug);
+      setTitle(response.data.title);
+      setQuizId(response.data.id);
+    } catch (error) {
+      logger.error(error);
+    }
   };
   const handleChange = e => {
     const name = e.target.name;
@@ -34,23 +41,29 @@ export const AttemptQuiz = () => {
     setSelectedAnswer({ ...selectedAnswer, [name]: value });
   };
   const handleLogin = async () => {
-    const response = await usersApi.login({
-      user: {
-        email: userDetails.email,
-        first_name: userDetails.firstName,
-        last_name: userDetails.lastName,
-      },
-      quiz_id: quizId,
-    });
-    setLoading(true);
-    setAttemptId(response.data.attempt_id);
-    if (!response.data.eligible) {
-      window.location.assign(
-        `/public/${slug}/result/${response.data.attempt_id}`
-      );
+    try {
+      setLoading(true);
+      const response = await usersApi.login({
+        user: {
+          email: userDetails.email,
+          first_name: userDetails.firstName,
+          last_name: userDetails.lastName,
+        },
+        quiz_id: quizId,
+      });
+      setAttemptId(response.data.attempt_id);
+      if (!response.data.eligible) {
+        window.location.assign(
+          `/public/${slug}/result/${response.data.attempt_id}`
+        );
+      } else {
+        setIsLoggedIn(true);
+        setLoading(false);
+      }
+    } catch (error) {
+      logger.error(error);
+      setLoading(false);
     }
-    setLoading(false);
-    setIsLoggedIn(true);
   };
 
   const handleSubmit = async () => {
@@ -65,27 +78,29 @@ export const AttemptQuiz = () => {
         attempts: result,
       },
     };
-    await attemptAnswerApi.create(payload);
-
-    window.location.assign(`/public/${slug}/result/${attemptId}`);
+    try {
+      await attemptAnswerApi.create(payload);
+      window.location.assign(`/public/${slug}/result/${attemptId}`);
+    } catch (error) {
+      logger.error(error);
+    }
   };
 
   useEffect(() => {
     checkSlug();
   }, []);
-
-  if (isLoggedIn) {
+  if (loading) {
     return (
-      <AttendQuiz
-        title={title}
-        handleSubmit={handleSubmit}
-        quizId={quizId}
-        handleChange={handleChange}
-      />
+      <div>
+        <Navbar />
+        <div className="mt-32">
+          <PageLoader />
+        </div>
+      </div>
     );
   }
 
-  if (!loading) {
+  if (!isLoggedIn) {
     return (
       <div>
         (
@@ -100,5 +115,12 @@ export const AttemptQuiz = () => {
     );
   }
 
-  return <h1>Loading...</h1>;
+  return (
+    <AttendQuiz
+      title={title}
+      handleSubmit={handleSubmit}
+      quizId={quizId}
+      handleChange={handleChange}
+    />
+  );
 };

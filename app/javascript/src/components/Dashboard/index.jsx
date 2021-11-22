@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { Plus } from "@bigbinary/neeto-icons";
-import { Button } from "@bigbinary/neetoui/v2";
+import { Button, PageLoader } from "@bigbinary/neetoui/v2";
 
 import quizzesApi from "apis/quizzes";
 
@@ -14,8 +14,8 @@ const Dashboard = () => {
 
   const fetchQuizzes = async () => {
     try {
+      setLoading(true);
       const response = await quizzesApi.list();
-
       setQuizzes(response.data.quizzes);
       setLoading(false);
     } catch (error) {
@@ -31,7 +31,9 @@ const Dashboard = () => {
     return (
       <div>
         <Navbar />
-        <h1>Loading...</h1>
+        <div className="mt-48">
+          <PageLoader />
+        </div>
       </div>
     );
   }

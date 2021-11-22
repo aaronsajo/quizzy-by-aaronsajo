@@ -17,42 +17,48 @@ export const StandardLogin = ({
         <Typography style="h2" className="my-12">
           Welcome to {title}{" "}
         </Typography>
-        <div className="w-2/5">
-          <Input
-            label="email:"
-            placeholder="oliver@example.com"
-            value={userDetails.email}
-            onChange={e =>
-              setUserDetails(values => ({ ...values, email: e.target.value }))
-            }
-          />
-          <br />
-          <Input
-            label="First Name:"
-            placeholder="Enter your first name"
-            value={userDetails.firstName}
-            onChange={e =>
-              setUserDetails(values => ({
-                ...values,
-                firstName: e.target.value,
-              }))
-            }
-          />
-          <br />
-          <Input
-            label="Last Name:"
-            placeholder="Enter your last  name"
-            value={userDetails.lastName}
-            onChange={e =>
-              setUserDetails(values => ({
-                ...values,
-                lastName: e.target.value,
-              }))
-            }
-          />
-          <br />
-          <Button label="Submit" onClick={() => handleLogin()} />
-        </div>
+        <form onSubmit={handleLogin}>
+          <div className="w-2/5">
+            <Input
+              label="email:"
+              type="email"
+              placeholder="oliver@example.com"
+              value={userDetails.email}
+              required="required"
+              onChange={e =>
+                setUserDetails(values => ({ ...values, email: e.target.value }))
+              }
+            />
+            <br />
+            <Input
+              label="First Name:"
+              placeholder="Enter your first name"
+              value={userDetails.firstName}
+              required="required"
+              onChange={e =>
+                setUserDetails(values => ({
+                  ...values,
+                  firstName: e.target.value,
+                }))
+              }
+            />
+            <br />
+            <Input
+              label="Last Name:"
+              placeholder="Enter your last  name"
+              value={userDetails.lastName}
+              required="required"
+              onChange={e =>
+                setUserDetails(values => ({
+                  ...values,
+                  lastName: e.target.value,
+                }))
+              }
+            />
+            <br />
+            <Button label="Submit" type="submit" />
+          </div>
+        </form>
       </div>
     </div>
   );

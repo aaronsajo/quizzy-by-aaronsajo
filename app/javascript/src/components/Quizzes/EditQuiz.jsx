@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Input, Button } from "@bigbinary/neetoui/v2";
+import { Input, Button, PageLoader } from "@bigbinary/neetoui/v2";
 import { useParams } from "react-router-dom";
 
 import quizzesApi from "apis/quizzes";
@@ -42,8 +42,11 @@ const EditQuiz = () => {
 
   if (pageLoading) {
     return (
-      <div className="w-screen h-screen">
-        <h2>Loading...</h2>
+      <div>
+        <Navbar />
+        <div className="w-screen h-screen">
+          <PageLoader />
+        </div>
       </div>
     );
   }
@@ -51,16 +54,17 @@ const EditQuiz = () => {
   return (
     <div>
       <Navbar />
-      <form className="max-w-lg mx-auto mt-10">
+      <form className="max-w-lg mx-auto mt-10" onSubmit={handleSubmit}>
         <h1 className="mb-5">Change Quiz Name</h1>
         <Input
           label="New Quiz Name:"
           placeholder="Quiz Title (Max 50 Characters Allowed)"
           value={title}
           onChange={e => setTitle(e.target.value)}
+          required="required"
           className="mb-5"
         />
-        <Button label="Submit" onClick={handleSubmit} />
+        <Button label="Submit" type="submit" />
       </form>
     </div>
   );

@@ -54,7 +54,6 @@ class QuestionsController < ApplicationController
     end
 
     def load_question
-      puts params[:id]
       @question = Question.find_by(id: params[:id])
       unless @question
         render status: :not_found, json: { error: t("not_found", entity: "Question") }

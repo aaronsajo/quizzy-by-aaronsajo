@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Input, Button } from "@bigbinary/neetoui/v2";
+import { Input, Button, PageLoader } from "@bigbinary/neetoui/v2";
 
 import quizzesApi from "apis/quizzes";
 
@@ -21,12 +21,21 @@ const CreateQuiz = ({ history }) => {
       setLoading(false);
     }
   };
-  if (loading) <h1>Loading...</h1>;
+  if (loading) {
+    return (
+      <div>
+        <Navbar />
+        <div>
+          <PageLoader />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
       <Navbar />
-      <form className="max-w-lg mx-auto mt-10">
+      <form className="max-w-lg mx-auto mt-10" onSubmit={handleSubmit}>
         <h1 className="mb-5">Add new Quiz</h1>
         <Input
           label="Quiz Name"
@@ -34,8 +43,9 @@ const CreateQuiz = ({ history }) => {
           value={title}
           onChange={e => setTitle(e.target.value)}
           className="mb-5"
+          required="required"
         />
-        <Button label="Submit" onClick={handleSubmit} />
+        <Button label="Submit" type="submit" />
       </form>
     </div>
   );
