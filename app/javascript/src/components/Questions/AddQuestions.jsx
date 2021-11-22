@@ -40,6 +40,7 @@ export const AddQuestions = () => {
         };
       });
       try {
+        setLoading(true);
         await questionApi.create({
           question: {
             description: question,
@@ -47,9 +48,12 @@ export const AddQuestions = () => {
             options_attributes: data,
           },
         });
+
         window.location.href = `/quiz/${id}/show`;
+        setLoading(false);
       } catch (error) {
         logger.error(error);
+        setLoading(false);
       }
     }
   };
