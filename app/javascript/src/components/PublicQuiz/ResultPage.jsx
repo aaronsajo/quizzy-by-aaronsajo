@@ -1,11 +1,8 @@
-import { TOASTR_OPTIONS } from "constants";
-
 import React, { useState, useEffect } from "react";
 
 import { CheckCircle } from "@bigbinary/neeto-icons";
 import { Typography, Radio, PageLoader } from "@bigbinary/neetoui/v2";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import attemptApi from "apis/attempts";
 import { questionApi } from "apis/questions";
@@ -33,7 +30,6 @@ export const ResultPage = () => {
           localStorage.getItem("StandarUserEmail")
         )
       ) {
-        toast.error("Not authorized", TOASTR_OPTIONS);
         window.location.href = `/public/${slug}/attempt/new`;
       }
       setAtemptedQA(response.data.attempt.attempted_answer);
