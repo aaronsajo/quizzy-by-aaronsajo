@@ -17,6 +17,7 @@ const Login = () => {
     try {
       setLoading(true);
       const response = await authApi.login({ login: { email, password } });
+
       setToLocalStorage({
         authToken: response.data.authentication_token,
         email: response.data.email,
@@ -43,12 +44,13 @@ const Login = () => {
       >
         <div className="w-full max-w-md text-center">
           <h1>Login</h1>
-          <form className="mt-8 text-center" onSubmit={handleSubmit}>
+          <form className="mt-8 text-center">
             <Input
               label="Email"
               type="email"
               placeholder="oliver@example.com"
               onChange={e => setEmail(e.target.value)}
+              required="required"
             />
 
             <Input
@@ -57,9 +59,10 @@ const Login = () => {
               placeholder="****"
               onChange={e => setPassword(e.target.value)}
               className="py-4"
+              required="required"
             />
 
-            <Button type="submit" label="Log-in" />
+            <Button type="submit" label="Log-in" onClick={handleSubmit} />
           </form>
         </div>
       </div>

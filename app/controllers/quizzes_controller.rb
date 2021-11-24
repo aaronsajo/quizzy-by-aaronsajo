@@ -44,7 +44,7 @@ class QuizzesController < ApplicationController
     regex_pattern = "slug #{Constants::DB_REGEX_OPERATOR} ?"
     latest_quiz_slug = Quiz.where(
       regex_pattern,
-      "#{title_slug}$|#{title_slug}-[0-9]+$"
+      "^#{title_slug}$|^#{title_slug}-[0-9]+$"
     ).order(slug: :desc).first&.slug
     slug_count = 0
     if latest_quiz_slug.present?

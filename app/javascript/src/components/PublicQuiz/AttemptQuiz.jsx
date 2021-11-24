@@ -103,14 +103,12 @@ export const AttemptQuiz = () => {
   if (!isLoggedIn) {
     return (
       <div>
-        (
         <StandardLogin
           title={title}
           userDetails={userDetails}
           setUserDetails={setUserDetails}
           handleLogin={handleLogin}
         />
-        )
       </div>
     );
   }
