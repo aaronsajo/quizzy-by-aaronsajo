@@ -8,5 +8,6 @@ json.attempt do
   json.correct_answer_list @answer_list
   json.correct_answer_count @attempt.correct_answer_count
   json.incorrect_answer_count @attempt.incorrect_answer_count
+  json.standard_user_email @attempt.user.email
 
 end

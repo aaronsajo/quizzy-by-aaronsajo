@@ -44,7 +44,7 @@ class QuizzesController < ApplicationController
     regex_pattern = "slug #{Constants::DB_REGEX_OPERATOR} ?"
     latest_quiz_slug = Quiz.where(
       regex_pattern,
-      "#{title_slug}$|#{title_slug}-[0-9]+$"
+      "^#{title_slug}$|^#{title_slug}-[0-9]+$"
     ).order(slug: :desc).first&.slug
     slug_count = 0
     if latest_quiz_slug.present?
@@ -58,8 +58,13 @@ class QuizzesController < ApplicationController
 
   def check_slug
     quiz_slug = Quiz.find_by(slug: params[:slug])
-    @id = quiz_slug ? quiz_slug.id : nil
-    @title = quiz_slug ? quiz_slug.title : nil
+    if quiz_slug
+      @id = quiz_slug ? quiz_slug.id : nil
+      @title = quiz_slug ? quiz_slug.title : nil
+    else
+      render status: :unprocessable_entity,
+        json: { error: t("not_found", entity: "Quiz") }
+    end
   end
 
   def report

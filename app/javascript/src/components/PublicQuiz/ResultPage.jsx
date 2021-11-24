@@ -24,23 +24,37 @@ export const ResultPage = () => {
     try {
       setLoading(true);
       const response = await attemptApi.show(attemptId);
+      if (
+        !(
+          response.data.attempt.standard_user_email ===
+          localStorage.getItem("StandarUserEmail")
+        )
+      ) {
+        window.location.href = `/public/${slug}/attempt/new`;
+      }
       setAtemptedQA(response.data.attempt.attempted_answer);
       setCorrectAnswerList(response.data.attempt.correct_answer_list);
-      const slugResponse = await quizzesApi.checkSlug(slug);
-      setTitle(slugResponse.data.title);
-
-      const questionResponse = await questionApi.list(slugResponse.data.id);
-
-      setData(questionResponse.data.questions);
-
       setCorrectCount(response.data.attempt.correct_answer_count);
       setInCorrectCount(response.data.attempt.incorrect_answer_count);
       setLoading(false);
     } catch (error) {
       logger.error(error);
+      window.location.href = `/public/${slug}/attempt/new`;
+    }
+    try {
+      setLoading(true);
+      const slugResponse = await quizzesApi.checkSlug(slug);
+      setTitle(slugResponse.data.title);
+      const questionResponse = await questionApi.list(slugResponse.data.id);
+      setData(questionResponse.data.questions);
+
       setLoading(false);
+    } catch (error) {
+      window.location.href = `/public/${slug}`;
+      logger.error(error);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -71,6 +85,9 @@ export const ResultPage = () => {
           incorrect answers.
         </Typography>
         {data.map((question, i) => {
+          const attemptedAnwser = attemptedQA.filter(
+            ele => ele.question_id === question.id
+          )[0]?.attempted_answer;
           return (
             <div key={i}>
               <div className="pb-10">
@@ -103,7 +120,9 @@ export const ResultPage = () => {
                         }
                         value={option.id}
                         disabled={true}
-                        checked={option.id == attemptedQA[i]?.attempted_answer}
+                        checked={
+                          attemptedAnwser && option.id == attemptedAnwser
+                        }
                         className="my-1"
                       />
                     </div>

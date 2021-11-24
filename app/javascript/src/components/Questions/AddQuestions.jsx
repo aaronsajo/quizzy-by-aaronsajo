@@ -23,7 +23,8 @@ export const AddQuestions = () => {
 
     setOptions(opt => [...opt, { [newOption]: "" }]);
   };
-  const handleSubmit = async () => {
+  const handleSubmit = async event => {
+    event.preventDefault();
     if (question.trim().length === 0) {
       toast.error("Question Can't be blank", TOASTR_OPTIONS);
     } else if (
@@ -40,7 +41,6 @@ export const AddQuestions = () => {
         };
       });
       try {
-        setLoading(true);
         await questionApi.create({
           question: {
             description: question,
@@ -48,12 +48,9 @@ export const AddQuestions = () => {
             options_attributes: data,
           },
         });
-
         window.location.href = `/quiz/${id}/show`;
-        setLoading(false);
       } catch (error) {
         logger.error(error);
-        setLoading(false);
       }
     }
   };
@@ -63,12 +60,12 @@ export const AddQuestions = () => {
     if (nextOption) {
       dummyOption[index][`opt${index + 1}`] = nextOption[`opt${index + 2}`];
       dummyOption.pop();
-      if (
-        answer &&
-        (answer.value === Object.keys(opt)[0] ||
-          answer.value === Object.keys(nextOption)[0])
-      ) {
+      if (answer && answer.value === Object.keys(opt)[0]) {
         setAnswer(null);
+      }
+
+      if (answer && answer.value === Object.keys(nextOption)[0]) {
+        setAnswer({ label: Object.keys(opt)[0], value: Object.keys(opt)[0] });
       }
     } else {
       dummyOption.pop();
@@ -95,6 +92,7 @@ export const AddQuestions = () => {
   useEffect(() => {
     fetchQuizDetails();
   }, []);
+
   return (
     <QuestionForm
       title={title}

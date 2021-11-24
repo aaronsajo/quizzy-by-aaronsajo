@@ -49,6 +49,7 @@ const Login = () => {
               type="email"
               placeholder="oliver@example.com"
               onChange={e => setEmail(e.target.value)}
+              required="required"
             />
 
             <Input
@@ -57,6 +58,7 @@ const Login = () => {
               placeholder="****"
               onChange={e => setPassword(e.target.value)}
               className="py-4"
+              required="required"
             />
 
             <Button type="submit" label="Log-in" />

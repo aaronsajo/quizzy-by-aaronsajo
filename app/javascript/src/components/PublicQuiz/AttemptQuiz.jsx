@@ -28,11 +28,14 @@ export const AttemptQuiz = () => {
 
   const checkSlug = async () => {
     try {
+      setLoading(true);
       const response = await quizzesApi.checkSlug(slug);
       setTitle(response.data.title);
       setQuizId(response.data.id);
+      setLoading(false);
     } catch (error) {
       logger.error(error);
+      window.location.href = `/public/${slug}`;
     }
   };
   const handleChange = e => {
@@ -51,6 +54,8 @@ export const AttemptQuiz = () => {
         },
         quiz_id: quizId,
       });
+
+      localStorage.setItem("StandarUserEmail", userDetails.email.toLowerCase());
       setAttemptId(response.data.attempt_id);
       if (!response.data.eligible) {
         window.location.assign(
@@ -103,14 +108,12 @@ export const AttemptQuiz = () => {
   if (!isLoggedIn) {
     return (
       <div>
-        (
         <StandardLogin
           title={title}
           userDetails={userDetails}
           setUserDetails={setUserDetails}
           handleLogin={handleLogin}
         />
-        )
       </div>
     );
   }
