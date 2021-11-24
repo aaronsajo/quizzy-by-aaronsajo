@@ -30,7 +30,7 @@ export const ResultPage = () => {
           localStorage.getItem("StandarUserEmail")
         )
       ) {
-        window.location.href = `/public/${slug}/attempt/new`;
+        //  window.location.href = `/public/${slug}/attempt/new`;
       }
       setAtemptedQA(response.data.attempt.attempted_answer);
       setCorrectAnswerList(response.data.attempt.correct_answer_list);
