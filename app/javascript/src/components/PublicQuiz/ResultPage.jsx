@@ -26,20 +26,23 @@ export const ResultPage = () => {
       const response = await attemptApi.show(attemptId);
       if (
         !(
-          response.data.attempt.standard_user_email ==
+          response.data.attempt.standard_user_email ===
           localStorage.getItem("StandarUserEmail")
         )
       ) {
-        //  window.location.href = `/public/${slug}/attempt/new`;
+        window.location.href = `/public/${slug}/attempt/new`;
       }
       setAtemptedQA(response.data.attempt.attempted_answer);
       setCorrectAnswerList(response.data.attempt.correct_answer_list);
       setCorrectCount(response.data.attempt.correct_answer_count);
       setInCorrectCount(response.data.attempt.incorrect_answer_count);
+      setLoading(false);
     } catch (error) {
       logger.error(error);
+      window.location.href = `/public/${slug}/attempt/new`;
     }
     try {
+      setLoading(true);
       const slugResponse = await quizzesApi.checkSlug(slug);
       setTitle(slugResponse.data.title);
       const questionResponse = await questionApi.list(slugResponse.data.id);
