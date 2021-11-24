@@ -55,7 +55,7 @@ export const AttemptQuiz = () => {
         quiz_id: quizId,
       });
 
-      localStorage.setItem("StandarUserEmail", userDetails.email);
+      localStorage.setItem("StandarUserEmail", userDetails.email.toLowerCase());
       setAttemptId(response.data.attempt_id);
       if (!response.data.eligible) {
         window.location.assign(

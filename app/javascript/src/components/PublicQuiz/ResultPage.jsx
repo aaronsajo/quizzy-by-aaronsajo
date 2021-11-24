@@ -22,12 +22,14 @@ export const ResultPage = () => {
 
   const fetchData = async () => {
     try {
-      const localStoredEmail = localStorage
-        .getItem("StandarUserEmail")
-        .toLowerCase();
       setLoading(true);
       const response = await attemptApi.show(attemptId);
-      if (!(response.data.attempt.standard_user_email === localStoredEmail)) {
+      if (
+        !(
+          response.data.attempt.standard_user_email ===
+          localStorage.getItem("StandarUserEmail")
+        )
+      ) {
         window.location.href = `/public/${slug}/attempt/new`;
       }
       setAtemptedQA(response.data.attempt.attempted_answer);
