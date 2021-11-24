@@ -29,6 +29,7 @@ export const AttemptQuiz = () => {
   const checkSlug = async () => {
     try {
       const response = await quizzesApi.checkSlug(slug);
+
       setTitle(response.data.title);
       setQuizId(response.data.id);
     } catch (error) {

@@ -58,7 +58,8 @@ export const EditQuestions = () => {
     setOptions(opt => [...opt, { [newOption]: "" }]);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async event => {
+    event.preventDefault();
     if (question.trim().length === 0) {
       toast.error("Question Can't be blank", TOASTR_OPTIONS);
     } else if (
@@ -87,7 +88,6 @@ export const EditQuestions = () => {
         data.push(deletedData);
       });
       try {
-        setLoading(true);
         await questionApi.update({
           id,
           payload: {
@@ -99,7 +99,6 @@ export const EditQuestions = () => {
           },
         });
         window.location.href = `/quiz/${quizid}/show`;
-        setLoading(false);
       } catch (error) {
         logger.error(error);
       }
@@ -119,12 +118,12 @@ export const EditQuestions = () => {
         dummyOption[index].id = nextOption.id;
       }
       dummyOption.pop();
-      if (
-        answer &&
-        (answer.value === Object.keys(opt)[0] ||
-          answer.value === Object.keys(nextOption)[0])
-      ) {
+      if (answer && answer.value === Object.keys(opt)[0]) {
         setAnswer(null);
+      }
+
+      if (answer && answer.value === Object.keys(nextOption)[0]) {
+        setAnswer({ label: Object.keys(opt)[0], value: Object.keys(opt)[0] });
       }
     } else {
       dummyOption.pop();
