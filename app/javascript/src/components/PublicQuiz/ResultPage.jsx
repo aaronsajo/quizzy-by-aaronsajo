@@ -22,14 +22,10 @@ export const ResultPage = () => {
 
   const fetchData = async () => {
     try {
+      const storedValue = JSON.parse(localStorage.getItem("StandarUserEmail"));
       setLoading(true);
       const response = await attemptApi.show(attemptId);
-      if (
-        !(
-          response.data.attempt.standard_user_email ===
-          localStorage.getItem("StandarUserEmail")
-        )
-      ) {
+      if (!(response.data.attempt.standard_user_email === storedValue)) {
         window.location.href = `/public/${slug}/attempt/new`;
       }
       setAtemptedQA(response.data.attempt.attempted_answer);
