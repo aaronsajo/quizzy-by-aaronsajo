@@ -30,15 +30,13 @@ export const ResultPage = () => {
           localStorage.getItem("StandarUserEmail")
         )
       ) {
-        // window.location.href = `/public/${slug}/attempt/new`;
-        window.location.href = `/public/${slug}`;
+        window.location.href = `/public/${slug}/attempt/new`;
       }
       setAtemptedQA(response.data.attempt.attempted_answer);
       setCorrectAnswerList(response.data.attempt.correct_answer_list);
       setCorrectCount(response.data.attempt.correct_answer_count);
       setInCorrectCount(response.data.attempt.incorrect_answer_count);
     } catch (error) {
-      window.location.href = `/public/${slug}/attempt/new`;
       logger.error(error);
     }
     try {
